@@ -1,14 +1,16 @@
 # AcademicHub
 
+AcademicHub est une plateforme centralisée pour la gestion des ressources académiques et la collaboration. Ce projet utilise [Nx](https://nx.dev) et [Angular](https://angular.io) pour offrir une architecture monorepo robuste et évolutive.
+
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+✨ L'espace de travail Nx pour AcademicHub est prêt ✨.
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+En savoir plus sur la configuration de cet espace de travail ou lancez `npx nx graph` pour explorer visuellement la structure du projet.
 
 ## Run tasks
 
-To run the dev server for your app, use:
+Pour lancer le serveur de développement de l'application `academic-hub` :
 
 ```sh
 npx nx serve academic-hub
