@@ -17,13 +17,15 @@
         <button
           pButton
           label="Explore Projects"
-          class="p-button-lg explore-btn">
+          class="p-button-lg explore-btn"
+          routerLink="/projects">
         </button>
 
         <button
           pButton
           label="Join Communities"
-          class="p-button-outlined p-button-lg community-btn">
+          class="p-button-outlined p-button-lg community-btn"
+          routerLink="/communities">
         </button>
 
       </div>
@@ -31,4 +33,116 @@
     </div>
 
   </div>
+</section>
+
+<section class="stats-section">
+
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <i class="pi pi-users"></i>
+      <h2>2,547</h2>
+      <p>Active Students</p>
+      <span>+124 this month</span>
+    </div>
+
+    <div class="stat-card">
+      <i class="pi pi-book"></i>
+      <h2>138</h2>
+      <p>Communities</p>
+      <span>+12 new communities</span>
+    </div>
+
+    <div class="stat-card">
+      <i class="pi pi-briefcase"></i>
+      <h2>412</h2>
+      <p>Projects</p>
+      <span>+38 ongoing projects</span>
+    </div>
+
+    <div class="stat-card">
+      <i class="pi pi-comments"></i>
+      <h2>18,920</h2>
+      <p>Discussions</p>
+      <span>+530 this week</span>
+    </div>
+
+  </div>
+
+</section>
+
+<section class="main-grid">
+
+  <!-- LEFT: Trending Projects -->
+  <div class="panel">
+
+    <div class="panel-header">
+      <h3>Trending Projects</h3>
+      <a routerLink="/projects">View all</a>
+    </div>
+
+    <div class="card-list">
+
+      <a class="list-card" routerLink="/projects">
+        <div class="avatar"></div>
+        <div>
+          <h4>AI Study Assistant</h4>
+          <p>Machine learning tool for students</p>
+        </div>
+      </a>
+
+      <a class="list-card" routerLink="/communities">
+        <div class="avatar"></div>
+        <div>
+          <h4>Campus Social Network</h4>
+          <p>Connect students across universities</p>
+        </div>
+      </a>
+
+      <a class="list-card" routerLink="/projects">
+        <div class="avatar"></div>
+        <div>
+          <h4>Smart Library System</h4>
+          <p>Digital library management platform</p>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- RIGHT: Communities + Discussions -->
+  <div class="side-grid">
+
+    <div class="panel">
+
+      <div class="panel-header">
+        <h3>Popular Communities</h3>
+        <a routerLink="/communities">Explore</a>
+      </div>
+
+      <div class="mini-list">
+        <a class="mini-item" routerLink="/communities">💻 Computer Science</a>
+        <a class="mini-item" routerLink="/communities">📊 Data Science</a>
+        <a class="mini-item" routerLink="/communities">🎨 Design & UX</a>
+      </div>
+
+    </div>
+
+    <div class="panel">
+
+      <div class="panel-header">
+        <h3>Recent Discussions</h3>
+        <a routerLink="/chat">Forum</a>
+      </div>
+
+      <div class="mini-list">
+        <a class="mini-item" routerLink="/chat">“Best tools for final year projects?”</a>
+        <a class="mini-item" routerLink="/chat">“How to prepare for AWS certification?”</a>
+        <a class="mini-item" routerLink="/chat">“UI/UX tips for beginners”</a>
+      </div>
+
+    </div>
+
+  </div>
+
 </section>
