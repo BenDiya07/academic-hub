@@ -1,1 +1,79 @@
-<p>feed works!</p>
+<div class="feed-container">
+  <!-- HEADER -->
+  <div class="feed-header">
+    <h1>Community Feed</h1>
+    <p>Share updates, ideas, and progress with your academic community.</p>
+  </div>
+
+  <!-- CREATE POST CARD -->
+  <p-card class="create-post-card">
+    <div class="create-post-header">
+      <p-avatar label="👤" shape="circle" size="large"></p-avatar>
+      <textarea
+        pInputTextarea
+        [(ngModel)]="newPostContent"
+        placeholder="What's happening in your academic world?"
+        rows="3"
+        class="create-post-input w-full"></textarea>
+    </div>
+
+    <div class="post-actions">
+      <input
+        pInputText
+        [(ngModel)]="newPostTags"
+        placeholder="Tags (AI, AWS, Design...)"
+        class="w-full" />
+      <p-button
+        (click)="createPost()"
+        [disabled]="!newPostContent().trim()"
+        label="Post"
+        icon="pi pi-send">
+      </p-button>
+    </div>
+  </p-card>
+
+  <!-- FEED POSTS -->
+  <div class="feed-posts">
+    @if (posts().length === 0) {
+      <p-card>
+        <p class="text-center text-gray-500">No posts yet. Be the first to share something 🚀</p>
+      </p-card>
+    }
+
+    @for (post of posts(); track post.id) {
+      <p-card class="post-card">
+        <div class="post-header">
+          <div class="post-user">
+            <p-avatar [label]="post.avatar" shape="circle"></p-avatar>
+            <div>
+              <p class="post-name">{{ post.user }}</p>
+              <small class="post-time">{{ post.time }}</small>
+            </div>
+          </div>
+        </div>
+
+        <p class="post-content">{{ post.content }}</p>
+
+        <div class="post-tags">
+          @for (tag of post.tags; track tag) {
+            <p-chip [label]="tag" class="tag-chip"></p-chip>
+          }
+        </div>
+
+        <p-divider></p-divider>
+
+        <div class="post-footer">
+          <p-button
+            (click)="toggleLike(post.id)"
+            [text]="true"
+            [icon]="post.liked ? 'pi pi-heart-fill' : 'pi pi-heart'"
+            [label]="post.likes.toString()"
+            [styleClass]="post.liked ? 'text-red-500' : 'text-gray-500'">
+          </p-button>
+          <p-button [text]="true" icon="pi pi-comment" [label]="post.comments.toString()"></p-button>
+          <p-button [text]="true" icon="pi pi-share-alt" label="Share"></p-button>
+        </div>
+      </p-card>
+    }
+  </div>
+</div>
