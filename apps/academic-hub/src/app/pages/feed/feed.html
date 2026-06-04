@@ -8,7 +8,7 @@
   <!-- CREATE POST CARD -->
   <p-card class="create-post-card">
     <div class="create-post-header">
-      <p-avatar label="👤" shape="circle" size="large"></p-avatar>
+      <p-avatar label="U" shape="circle" size="large"></p-avatar>
       <textarea
         pInputTextarea
         [(ngModel)]="newPostContent"
@@ -36,7 +36,7 @@
   <div class="feed-posts">
     @if (posts().length === 0) {
       <p-card>
-        <p class="text-center text-gray-500">No posts yet. Be the first to share something 🚀</p>
+        <p class="text-center text-gray-500">No posts yet. Be the first to share something</p>
       </p-card>
     }
 

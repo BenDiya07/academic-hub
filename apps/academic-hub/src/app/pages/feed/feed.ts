@@ -47,9 +47,9 @@ export class Feed {
     {
       id: 1,
       user: 'Jean Kabila',
-      avatar: '👨‍💻',
+      avatar: 'JK',
       time: '2 hours ago',
-      content: 'Just finished my AI project using Angular + TensorFlow. Super excited to share it soon 🚀',
+      content: 'Just finished my AI project using Angular + TensorFlow. Super excited to share it soon',
       tags: ['AI', 'Angular', 'MachineLearning'],
       likes: 45,
       comments: 8,
@@ -58,7 +58,7 @@ export class Feed {
     {
       id: 2,
       user: 'Amina Diallo',
-      avatar: '👩‍💼',
+      avatar: 'AD',
       time: '5 hours ago',
       content: 'Looking for collaborators on a Smart Campus project using AWS serverless architecture. Who is interested?',
       tags: ['AWS', 'Cloud', 'Serverless'],
@@ -69,7 +69,7 @@ export class Feed {
     {
       id: 3,
       user: 'Mohamed Hassan',
-      avatar: '👨‍🎓',
+      avatar: 'MH',
       time: '1 day ago',
       content: 'Just launched my portfolio built with Angular and Tailwind CSS. Check it out and let me know your thoughts!',
       tags: ['Design', 'Angular', 'Portfolio'],
@@ -91,7 +91,7 @@ export class Feed {
     const newPost: Post = {
       id: Date.now(),
       user: 'You',
-      avatar: '👤',
+      avatar: 'U',
       time: 'just now',
       content,
       tags: tags.length > 0 ? tags : ['General'],

@@ -1,1 +1,250 @@
-<p>projects works!</p>
+<div class="projects-container">
+  <!-- HERO SECTION -->
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1>Academic Projects</h1>
+      <p>Discover innovative student projects, join teams and build your portfolio.</p>
+      <div class="hero-buttons">
+        <p-button
+          (click)="showCreateDialog.set(true)"
+          label="Create Project"
+          icon="pi pi-plus"
+          [rounded]="true"
+          severity="primary">
+        </p-button>
+        <p-button
+          label="Browse Projects"
+          icon="pi pi-search"
+          [rounded]="true"
+          severity="info"
+          [text]="true">
+        </p-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATISTICS SECTION -->
+  <div class="stats-section">
+    @for (stat of stats(); track stat.label) {
+      <div class="stat-card">
+        <span class="stat-icon">{{ stat.icon }}</span>
+        <p class="stat-label">{{ stat.label }}</p>
+        <p class="stat-value">{{ stat.value | number }}</p>
+      </div>
+    }
+  </div>
+
+  <!-- SEARCH & FILTERS SECTION -->
+  <div class="search-filter-section">
+    <div class="search-box">
+      <input
+        pInputText
+        [(ngModel)]="searchTerm"
+        placeholder="Search projects by name or description..."
+        class="search-input" />
+    </div>
+
+    <div class="filter-chips">
+      @for (tech of technologies(); track tech) {
+        <p-chip
+          [label]="tech"
+          (click)="selectedFilter.set(tech)"
+          [ngClass]="{'active-filter': selectedFilter() === tech}"
+          class="filter-chip">
+        </p-chip>
+      }
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT SECTION -->
+  <div class="main-content">
+    <!-- PROJECTS GRID -->
+    <div class="projects-section">
+      <h2 class="section-title">{{ selectedFilter() === 'All' ? 'All Projects' : selectedFilter() + ' Projects' }}</h2>
+
+      @if (filteredProjects.length === 0) {
+        <p-card class="no-projects">
+          <p class="text-center">No projects found. Be the first to create one!</p>
+        </p-card>
+      } @else {
+        <div class="projects-grid">
+          @for (project of filteredProjects; track project.id) {
+            <p-card class="project-card">
+              <div
+                class="project-cover"
+                [style.background-image]="project.image ? 'url(' + project.image + ')' : 'none'">
+                <span class="cover-tag">{{ project.category }}</span>
+              </div>
+
+              <div class="project-body">
+                <div class="project-header">
+                  <h3 class="project-title">{{ project.title }}</h3>
+                  <p-chip
+                    [label]="project.status"
+                    [ngClass]="getStatusClass(project.status)"
+                    class="status-chip">
+                  </p-chip>
+                </div>
+
+                <p class="project-description">{{ project.description }}</p>
+
+                <div class="owner-info">
+                  <strong>Owner:</strong>
+                  <div class="owner-badge">
+                    <span class="owner-avatar">{{ project.owner.avatar }}</span>
+                    <span>{{ project.owner.name }}</span>
+                  </div>
+                </div>
+
+                <div class="project-tech-section">
+                  <strong class="tech-label">Technologies:</strong>
+                  <div class="project-tech">
+                    @for (tech of project.technologies; track tech) {
+                      <p-chip [label]="tech" class="tech-chip"></p-chip>
+                    }
+                  </div>
+                </div>
+
+                <div class="team-avatars">
+                  <div class="avatar-group">
+                    @for (avatar of project.membersAvatars; track avatar) {
+                      <p-avatar [label]="avatar" shape="circle" size="normal" styleClass="member-avatar"></p-avatar>
+                    }
+                  </div>
+                  <span class="member-count">{{ project.members }} members</span>
+                </div>
+
+                <p-divider></p-divider>
+
+                <div class="project-stats">
+                  <div class="progress-container">
+                    <label class="progress-label">Progress: {{ project.progress }}%</label>
+                    <p-progressBar [value]="project.progress"></p-progressBar>
+                  </div>
+
+                  <div class="members-views">
+                    @if (project.views) {
+                      <span class="views">{{ project.views }} views</span>
+                    }
+                  </div>
+                </div>
+
+                <div class="project-actions">
+                  <p-button
+                    label="View Project"
+                    icon="pi pi-eye"
+                    severity="primary"
+                    (click)="viewProject(project.id)">
+                  </p-button>
+                  <p-button
+                    label="Join Team"
+                    icon="pi pi-user-plus"
+                    severity="secondary">
+                  </p-button>
+                </div>
+              </div>
+            </p-card>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <!-- TRENDING PROJECTS -->
+      <p-card class="trending-card">
+        <p class="card-title">Trending Projects</p>
+
+        <div class="trending-list">
+          @for (project of trendingProjects; track project.id) {
+            <div class="trending-item">
+              <p class="trending-title">{{ project.title }}</p>
+              <p class="trending-views">+{{ project.views }} views</p>
+            </div>
+          }
+        </div>
+      </p-card>
+
+      <!-- CATEGORIES -->
+      <p-card class="categories-card">
+        <p class="card-title">Categories</p>
+
+        <div class="categories-list">
+          @for (category of categories(); track category.name) {
+            <div class="category-item">
+              <span class="category-icon">{{ category.icon }}</span>
+              <div class="category-info">
+                <p class="category-name">{{ category.name }}</p>
+                <p class="category-count">{{ category.count }} projects</p>
+              </div>
+            </div>
+          }
+        </div>
+      </p-card>
+    </aside>
+  </div>
+
+  <!-- CREATE PROJECT DIALOG -->
+  <p-dialog
+    [(visible)]="showCreateDialog"
+    [modal]="true"
+    header="Create New Project"
+    [style]="{ width: '100%', maxWidth: '600px' }"
+    [blockScroll]="true">
+    <div class="dialog-content">
+      <div class="form-group">
+        <label>Project Name *</label>
+        <input
+          pInputText
+          [(ngModel)]="newProject().name"
+          placeholder="Enter project name"
+          class="w-full" />
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea
+          pInputTextarea
+          [(ngModel)]="newProject().description"
+          placeholder="Describe your project"
+          rows="4"
+          class="w-full"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Technologies (comma-separated)</label>
+        <input
+          pInputText
+          [(ngModel)]="newProject().technologies"
+          placeholder="e.g., Angular, AWS, Python"
+          class="w-full" />
+      </div>
+
+      <div class="form-group">
+        <label>Visibility</label>
+        <p-select
+          [(ngModel)]="newProject().visibility"
+          [options]="[
+            { label: 'Public', value: 'Public' },
+            { label: 'Private', value: 'Private' },
+            { label: 'Team Only', value: 'Team Only' }
+          ]"
+          class="w-full">
+        </p-select>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Cancel"
+        (click)="showCreateDialog.set(false)"
+        severity="secondary">
+      </p-button>
+      <p-button
+        label="Create"
+        (click)="createProject()"
+        [disabled]="!newProject().name.trim()">
+      </p-button>
+    </ng-template>
+  </p-dialog>
+</div>
