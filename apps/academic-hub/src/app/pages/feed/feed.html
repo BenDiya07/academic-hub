@@ -24,17 +24,39 @@
         placeholder="Tags (AI, AWS, Design...)"
         class="w-full" />
       <p-button
-        (click)="createPost()"
-        [disabled]="!newPostContent().trim()"
+        (onClick)="createPost()"
+        [disabled]="!newPostContent().trim() || submitting()"
+        [loading]="submitting()"
         label="Post"
         icon="pi pi-send">
       </p-button>
     </div>
   </p-card>
 
+  @if (error()) {
+    <div class="feed-error">
+      <i class="pi pi-exclamation-circle"></i>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
+  @if (shareStatus()) {
+    <div class="feed-status">
+      <i class="pi pi-check-circle"></i>
+      <span>{{ shareStatus() }}</span>
+    </div>
+  }
+
   <!-- FEED POSTS -->
   <div class="feed-posts">
-    @if (posts().length === 0) {
+    @if (loading()) {
+      <p-card>
+        <div class="feed-loading">
+          <i class="pi pi-spin pi-spinner"></i>
+          <span>Loading posts…</span>
+        </div>
+      </p-card>
+    } @else if (posts().length === 0) {
       <p-card>
         <p class="text-center text-gray-500">No posts yet. Be the first to share something</p>
       </p-card>
@@ -44,10 +66,10 @@
       <p-card class="post-card">
         <div class="post-header">
           <div class="post-user">
-            <p-avatar [label]="post.avatar" shape="circle"></p-avatar>
+            <p-avatar [label]="post.authorInitials" shape="circle"></p-avatar>
             <div>
-              <p class="post-name">{{ post.user }}</p>
-              <small class="post-time">{{ post.time }}</small>
+              <p class="post-name">{{ post.authorName }}</p>
+              <small class="post-time">{{ timeAgo(post.createdAt) }}</small>
             </div>
           </div>
         </div>
@@ -64,16 +86,85 @@
 
         <div class="post-footer">
           <p-button
-            (click)="toggleLike(post.id)"
+            (onClick)="toggleLike(post)"
             [text]="true"
             [icon]="post.liked ? 'pi pi-heart-fill' : 'pi pi-heart'"
             [label]="post.likes.toString()"
             [styleClass]="post.liked ? 'text-red-500' : 'text-gray-500'">
           </p-button>
-          <p-button [text]="true" icon="pi pi-comment" [label]="post.comments.toString()"></p-button>
-          <p-button [text]="true" icon="pi pi-share-alt" label="Share"></p-button>
+          <p-button
+            [text]="true"
+            icon="pi pi-comment"
+            [label]="post.comments.toString()"
+            (onClick)="openComments(post)">
+          </p-button>
+          <p-button
+            [text]="true"
+            icon="pi pi-share-alt"
+            label="Share"
+            (onClick)="sharePost(post)">
+          </p-button>
         </div>
       </p-card>
     }
   </div>
+
+  <p-dialog
+    [(visible)]="commentsVisible"
+    [modal]="true"
+    header="Comments"
+    [style]="{ width: '100%', maxWidth: '620px' }"
+    (onHide)="closeComments()">
+    <div class="comments-list">
+      @if (commentsLoading()) {
+        <div class="comments-state">
+          <i class="pi pi-spin pi-spinner"></i>
+          <span>Loading comments…</span>
+        </div>
+      } @else if (comments().length === 0) {
+        <div class="comments-state">
+          <i class="pi pi-comment"></i>
+          <span>No comments yet. Start the conversation.</span>
+        </div>
+      } @else {
+        @for (comment of comments(); track comment.id) {
+          <div class="comment-item">
+            <p-avatar [label]="comment.authorInitials" shape="circle"></p-avatar>
+            <div class="comment-body">
+              <div class="comment-head">
+                <strong>{{ comment.authorName }}</strong>
+                <small>{{ timeAgo(comment.createdAt) }}</small>
+              </div>
+              <p>{{ comment.content }}</p>
+            </div>
+          </div>
+        }
+      }
+    </div>
+
+    <p-divider></p-divider>
+
+    <form class="comment-form" (ngSubmit)="addComment()">
+      <textarea
+        pInputTextarea
+        name="comment"
+        rows="3"
+        placeholder="Write a comment…"
+        [ngModel]="commentText()"
+        (ngModelChange)="commentText.set($event)">
+      </textarea>
+
+      @if (commentError()) {
+        <div class="comment-error">{{ commentError() }}</div>
+      }
+
+      <p-button
+        type="submit"
+        label="Add comment"
+        icon="pi pi-send"
+        [loading]="commentSubmitting()"
+        [disabled]="!commentText().trim() || commentSubmitting()">
+      </p-button>
+    </form>
+  </p-dialog>
 </div>

@@ -8,4 +8,6 @@ import { RouterModule } from '@angular/router';
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.css',
 })
-export class FooterComponent {}
+export class FooterComponent {
+  readonly year = new Date().getFullYear();
+}

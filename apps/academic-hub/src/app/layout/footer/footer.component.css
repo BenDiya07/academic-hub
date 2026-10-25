@@ -74,6 +74,39 @@
   line-height: 1.8;
 }
 
+.footer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.footer-cta {
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  background: #4f46e5;
+  color: white !important;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.footer-cta:hover {
+  background: #4338ca;
+  color: white !important;
+}
+
+.footer-cta.secondary {
+  background: transparent;
+  color: #4f46e5 !important;
+  border: 1px solid #c7d2fe;
+}
+
+.footer-cta.secondary:hover {
+  background: #eef2ff;
+}
+
 .footer-bottom {
   display: flex;
   flex-wrap: wrap;

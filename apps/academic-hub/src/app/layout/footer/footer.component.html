@@ -9,36 +9,39 @@
     </div>
 
     <div class="footer-section">
-      <h3>Navigation</h3>
+      <h3>Platform</h3>
       <ul>
-        <li><a routerLink="/">Home</a></li>
+        <li><a routerLink="/">Dashboard</a></li>
+        <li><a routerLink="/feed">Feed</a></li>
         <li><a routerLink="/projects">Projects</a></li>
         <li><a routerLink="/communities">Communities</a></li>
-        <li><a routerLink="/chat">Chat</a></li>
       </ul>
     </div>
 
     <div class="footer-section">
-      <h3>Community</h3>
+      <h3>Your account</h3>
       <ul>
-        <li><a routerLink="/projects">Projects</a></li>
-        <li><a routerLink="/communities">Communities</a></li>
-        <li><a routerLink="/chat">Chat</a></li>
+        <li><a routerLink="/profile">Profile</a></li>
+        <li><a routerLink="/chat">Messages</a></li>
+        <li><a routerLink="/settings">Settings</a></li>
       </ul>
     </div>
 
     <div class="footer-section">
-      <h3>Get Involved</h3>
-      <p>Join discussions, vote on designs, and contribute to building your academic ecosystem.</p>
+      <h3>Get involved</h3>
+      <p>Join discussions, share your work and contribute to your academic ecosystem.</p>
+      <div class="footer-actions">
+        <a routerLink="/projects" class="footer-cta">Start a project</a>
+        <a routerLink="/communities" class="footer-cta secondary">Find a community</a>
+      </div>
     </div>
   </div>
 
   <div class="footer-bottom">
-    <p>© 2026 Academic Hub. All rights reserved.</p>
+    <p>© {{ year }} Academic Hub. All rights reserved.</p>
     <div class="footer-links">
-      <a href="#">Privacy</a>
-      <a href="#">Terms</a>
-      <a href="#">Contact</a>
+      <a routerLink="/privacy">Privacy</a>
+      <a routerLink="/terms">Terms</a>
     </div>
   </div>
 </footer>

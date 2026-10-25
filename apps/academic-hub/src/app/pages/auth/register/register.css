@@ -1,0 +1,86 @@
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.08);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.auth-logo {
+  font-size: 2.5rem;
+}
+
+.auth-header h1 {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.auth-header p {
+  margin: 0;
+  color: #64748b;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field label {
+  font-weight: 600;
+  color: #334155;
+}
+
+.auth-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 0.9rem;
+}
+
+.divider-label {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.oauth-buttons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #64748b;
+}
+
+.auth-switch a {
+  color: #6366f1;
+  font-weight: 600;
+  text-decoration: none;
+}

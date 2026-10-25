@@ -1,1 +1,158 @@
-<p>profile works!</p>
+<div class="profile-container">
+  <div class="profile-header">
+    <div>
+      <h1>My Profile</h1>
+      <p>Manage your public profile and how others see you across Academic Hub.</p>
+    </div>
+    @if (!editing()) {
+      <p-button
+        label="Edit profile"
+        icon="pi pi-pencil"
+        (onClick)="startEditing()"
+        [disabled]="loading()">
+      </p-button>
+    }
+  </div>
+
+  @if (error()) {
+    <p-message severity="error" [text]="error() ?? ''" styleClass="w-full"></p-message>
+  }
+
+  @if (success()) {
+    <p-message severity="success" [text]="success() ?? ''" styleClass="w-full"></p-message>
+  }
+
+  @if (loading() && !profile()) {
+    <p-card>
+      <div class="profile-loading">
+        <i class="pi pi-spin pi-spinner"></i>
+        <span>Loading your profile…</span>
+      </div>
+    </p-card>
+  } @else {
+    <div class="profile-layout">
+      <p-card class="profile-summary">
+        <div class="summary-content">
+          <p-avatar [label]="initials()" shape="circle" size="xlarge"></p-avatar>
+          <h2>{{ profile()?.fullName || displayName() || 'Academic Hub member' }}</h2>
+          @if (profile()?.username) {
+            <p class="summary-username">&#64;{{ profile()?.username }}</p>
+          }
+          @if (profile()?.role) {
+            <span class="summary-badge">{{ profile()?.role }}</span>
+          }
+
+          <p-divider></p-divider>
+
+          <ul class="summary-facts">
+            @if (profile()?.department) {
+              <li><i class="pi pi-building"></i><span>{{ profile()?.department }}</span></li>
+            }
+            @if (profile()?.location) {
+              <li><i class="pi pi-map-marker"></i><span>{{ profile()?.location }}</span></li>
+            }
+            @if (email()) {
+              <li><i class="pi pi-envelope"></i><span>{{ email() }}</span></li>
+            }
+            @if (memberSince()) {
+              <li><i class="pi pi-calendar"></i><span>Member since {{ memberSince() }}</span></li>
+            }
+          </ul>
+        </div>
+      </p-card>
+
+      <p-card class="profile-details">
+        @if (!editing()) {
+          <div class="view-mode">
+            <section>
+              <h3>About</h3>
+              <p class="bio-text">
+                {{ profile()?.bio || 'Tell the community a little about yourself, your studies and the projects you care about.' }}
+              </p>
+            </section>
+
+            <section>
+              <h3>Academic information</h3>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="info-label">Full name</span>
+                  <span class="info-value">{{ profile()?.fullName || 'Not set' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Username</span>
+                  <span class="info-value">{{ profile()?.username ? '@' + profile()?.username : 'Not set' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Role</span>
+                  <span class="info-value">{{ profile()?.role || 'Not set' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Department</span>
+                  <span class="info-value">{{ profile()?.department || 'Not set' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Location</span>
+                  <span class="info-value">{{ profile()?.location || 'Not set' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Email</span>
+                  <span class="info-value">{{ email() || 'Not set' }}</span>
+                </div>
+              </div>
+            </section>
+          </div>
+        } @else {
+          <form class="edit-form" (ngSubmit)="save()">
+            <div class="field-grid">
+              <div class="field">
+                <label for="fullName">Full name</label>
+                <input pInputText id="fullName" name="fullName" [(ngModel)]="fullName" placeholder="Jane Doe" />
+              </div>
+
+              <div class="field">
+                <label for="username">Username</label>
+                <input pInputText id="username" name="username" [(ngModel)]="username" placeholder="jane.doe" />
+              </div>
+
+              <div class="field">
+                <label for="role">Role</label>
+                <input pInputText id="role" name="role" [(ngModel)]="role" placeholder="Student, Researcher…" />
+              </div>
+
+              <div class="field">
+                <label for="department">Department</label>
+                <input pInputText id="department" name="department" [(ngModel)]="department" placeholder="Computer Science" />
+              </div>
+
+              <div class="field">
+                <label for="location">Location</label>
+                <input pInputText id="location" name="location" [(ngModel)]="location" placeholder="City, Country" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="bio">Bio</label>
+              <textarea pInputTextarea id="bio" name="bio" [(ngModel)]="bio" rows="5" placeholder="A short introduction about yourself"></textarea>
+            </div>
+
+            <div class="form-actions">
+              <p-button
+                label="Cancel"
+                severity="secondary"
+                (onClick)="cancelEditing()"
+                [disabled]="saving()">
+              </p-button>
+              <p-button
+                type="submit"
+                label="Save changes"
+                icon="pi pi-check"
+                [loading]="saving()"
+                [disabled]="saving()">
+              </p-button>
+            </div>
+          </form>
+        }
+      </p-card>
+    </div>
+  }
+</div>

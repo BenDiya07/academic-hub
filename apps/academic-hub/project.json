@@ -7,12 +7,13 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:browser",
+      "executor": "@angular-devkit/build-angular:application",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/academic-hub",
         "index": "apps/academic-hub/src/index.html",
-        "main": "apps/academic-hub/src/main.ts",
+        "browser": "apps/academic-hub/src/main.ts",
+        "polyfills": [],
         "tsConfig": "apps/academic-hub/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
@@ -37,12 +38,16 @@
               "maximumError": "8kb"
             }
           ],
+          "fileReplacements": [
+            {
+              "replace": "apps/academic-hub/src/environments/environment.ts",
+              "with": "apps/academic-hub/src/environments/environment.prod.ts"
+            }
+          ],
           "outputHashing": "all"
         },
         "development": {
-          "buildOptimizer": false,
           "optimization": false,
-          "vendorChunk": true,
           "extractLicenses": false,
           "sourceMap": true,
           "namedChunks": true
@@ -73,10 +78,10 @@
       "executor": "@nx/eslint:lint"
     },
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "@nx/vite:test",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/academic-hub/jest.config.cts",
+        "config": "vitest.config.ts",
         "tsConfig": "apps/academic-hub/tsconfig.spec.json"
       }
     },

@@ -1,0 +1,86 @@
+<div class="auth-wrapper">
+  <p-card class="auth-card">
+    <div class="auth-header">
+      <div class="auth-logo">🎓</div>
+      <h1>Welcome back</h1>
+      <p>Sign in to continue to Academic Hub</p>
+    </div>
+
+    <form class="auth-form" (ngSubmit)="submit()">
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          pInputText
+          id="email"
+          type="email"
+          placeholder="you@university.edu"
+          [ngModel]="email()"
+          (ngModelChange)="email.set($event)"
+          name="email"
+          autocomplete="email"
+          required
+        />
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <p-password
+          id="password"
+          [ngModel]="password()"
+          (ngModelChange)="password.set($event)"
+          name="password"
+          placeholder="Password"
+          [feedback]="false"
+          [toggleMask]="true"
+          autocomplete="current-password"
+          required
+          styleClass="w-full">
+        </p-password>
+      </div>
+
+      @if (error) {
+        <div class="auth-error">
+          <i class="pi pi-exclamation-circle"></i>
+          <span>{{ error }}</span>
+        </div>
+      }
+
+      <p-button
+        type="submit"
+        label="Sign in"
+        icon="pi pi-sign-in"
+        styleClass="w-full"
+        [loading]="loading"
+        [disabled]="loading">
+      </p-button>
+    </form>
+
+    <p-divider align="center" type="solid">
+      <span class="divider-label">or continue with</span>
+    </p-divider>
+
+    <div class="oauth-buttons">
+      <p-button
+        label="Google"
+        icon="pi pi-google"
+        severity="secondary"
+        [outlined]="true"
+        styleClass="w-full"
+        (onClick)="signInWith('google')">
+      </p-button>
+      <p-button
+        label="GitHub"
+        icon="pi pi-github"
+        severity="secondary"
+        [outlined]="true"
+        styleClass="w-full"
+        (onClick)="signInWith('github')">
+      </p-button>
+    </div>
+
+    <p class="auth-switch">
+      Don't have an account?
+      <a routerLink="/register">Create one</a>
+    </p>
+  </p-card>
+</div>

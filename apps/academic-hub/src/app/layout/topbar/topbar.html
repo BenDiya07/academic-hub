@@ -1,42 +1,50 @@
 <header class="topbar">
+  <a class="logo" routerLink="/">
+    <span class="logo-mark">🎓</span>
+    <span class="logo-text">Academic Hub</span>
+  </a>
 
-  <div class="logo">
-    🎓 Academic Hub
-  </div>
-
-  <div class="search-box">
+  <form class="search-box" (ngSubmit)="submitSearch()" role="search">
+    <i class="pi pi-search search-icon"></i>
     <input
-      type="text"
-      placeholder="Search projects, communities..."
-    />
+      pInputText
+      type="search"
+      name="search"
+      placeholder="Search projects, communities, discussions…"
+      aria-label="Search Academic Hub"
+      [ngModel]="searchTerm()"
+      (ngModelChange)="searchTerm.set($event)" />
+  </form>
+
+  <div class="topbar-actions">
+    <nav class="nav-icons" aria-label="Main navigation">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Dashboard" aria-label="Dashboard">
+        <i class="pi pi-home"></i>
+      </a>
+
+      <a routerLink="/feed" routerLinkActive="active" title="Feed" aria-label="Feed">
+        <i class="pi pi-megaphone"></i>
+      </a>
+
+      <a routerLink="/projects" routerLinkActive="active" title="Projects" aria-label="Projects">
+        <i class="pi pi-briefcase"></i>
+      </a>
+
+      <a routerLink="/communities" routerLinkActive="active" title="Communities" aria-label="Communities">
+        <i class="pi pi-users"></i>
+      </a>
+
+      <a routerLink="/chat" routerLinkActive="active" title="Messages" aria-label="Messages">
+        <i class="pi pi-comments"></i>
+      </a>
+    </nav>
+
+    <p-menu #menu [model]="menuItems" [popup]="true" appendTo="body" />
+
+    <button type="button" class="user-btn" (click)="menu.toggle($event)" aria-label="Open account menu">
+      <p-avatar [label]="initials()" shape="circle" styleClass="user-avatar" />
+      <span class="user-name">{{ displayName() }}</span>
+      <i class="pi pi-angle-down"></i>
+    </button>
   </div>
-
-  <nav class="nav-icons">
-
-    <a routerLink="/">
-      <i class="pi pi-home"></i>
-    </a>
-
-    <a routerLink="/feed">
-      <i class="pi pi-megaphone"></i>
-    </a>
-
-    <a routerLink="/projects">
-      <i class="pi pi-briefcase"></i>
-    </a>
-
-    <a routerLink="/communities">
-      <i class="pi pi-users"></i>
-    </a>
-
-    <a routerLink="/chat">
-      <i class="pi pi-comments"></i>
-    </a>
-
-    <a routerLink="/profile">
-      <i class="pi pi-user"></i>
-    </a>
-
-  </nav>
-
 </header>

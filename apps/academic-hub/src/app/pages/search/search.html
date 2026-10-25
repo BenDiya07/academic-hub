@@ -1,0 +1,110 @@
+<div class="search-page">
+  <div class="search-header">
+    <h1>Search</h1>
+    <p>Find projects, communities and discussions across Academic Hub.</p>
+
+    <form class="search-form" (ngSubmit)="submit()">
+      <input
+        pInputText
+        type="search"
+        name="q"
+        placeholder="Search by keyword, technology or author…"
+        [ngModel]="searchInput()"
+        (ngModelChange)="searchInput.set($event)" />
+      <p-button type="submit" icon="pi pi-search" label="Search"></p-button>
+    </form>
+  </div>
+
+  @if (error()) {
+    <div class="search-error">
+      <i class="pi pi-exclamation-circle"></i>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="search-state">
+      <i class="pi pi-spin pi-spinner"></i>
+      <span>Loading content…</span>
+    </div>
+  } @else if (!query()) {
+    <div class="search-state">
+      <i class="pi pi-search"></i>
+      <p>Enter a search term to get started.</p>
+    </div>
+  } @else {
+    <p class="result-summary">
+      {{ resultCount() }} result{{ resultCount() === 1 ? '' : 's' }} for
+      <strong>“{{ query() }}”</strong>
+    </p>
+
+    @if (resultCount() === 0) {
+      <div class="search-state">
+        <i class="pi pi-inbox"></i>
+        <p>No results matched your search. Try a broader keyword.</p>
+      </div>
+    }
+
+    @if (projectResults().length > 0) {
+      <section class="result-group">
+        <h2><i class="pi pi-briefcase"></i> Projects</h2>
+        <div class="result-list">
+          @for (project of projectResults(); track project.id) {
+            <p-card class="result-card">
+              <div class="result-heading">
+                <a [routerLink]="['/projects', project.id]">{{ project.title }}</a>
+                <span class="result-badge">{{ project.status }}</span>
+              </div>
+              <p class="result-description">{{ project.description }}</p>
+              <div class="result-tags">
+                @for (tech of project.technologies.slice(0, 4); track tech) {
+                  <p-chip [label]="tech"></p-chip>
+                }
+              </div>
+            </p-card>
+          }
+        </div>
+      </section>
+    }
+
+    @if (communityResults().length > 0) {
+      <section class="result-group">
+        <h2><i class="pi pi-users"></i> Communities</h2>
+        <div class="result-list">
+          @for (community of communityResults(); track community.id) {
+            <p-card class="result-card">
+              <div class="result-heading">
+                <a routerLink="/communities">{{ community.name }}</a>
+                <span class="result-badge">{{ community.members }} members</span>
+              </div>
+              <p class="result-description">{{ community.description }}</p>
+              <span class="result-meta">{{ community.category }}</span>
+            </p-card>
+          }
+        </div>
+      </section>
+    }
+
+    @if (postResults().length > 0) {
+      <section class="result-group">
+        <h2><i class="pi pi-comments"></i> Discussions</h2>
+        <div class="result-list">
+          @for (post of postResults(); track post.id) {
+            <p-card class="result-card">
+              <div class="result-heading">
+                <a routerLink="/feed">{{ post.authorName }}</a>
+                <span class="result-meta">{{ timeAgo(post.createdAt) }}</span>
+              </div>
+              <p class="result-description">{{ post.content }}</p>
+              <div class="result-tags">
+                @for (tag of post.tags; track tag) {
+                  <p-chip [label]="tag"></p-chip>
+                }
+              </div>
+            </p-card>
+          }
+        </div>
+      </section>
+    }
+  }
+</div>
