@@ -1,9 +1,23 @@
 .app-layout {
   min-height: 100vh;
-  background: #0f172a;
-  color: white;
+  display: flex;
+  flex-direction: column;
+  background: #f8fafc;
+  color: #0f172a;
 }
 
 .page-content {
+  flex: 1;
+  width: 100%;
   padding: 24px;
+}
+
+app-footer {
+  margin-top: auto;
+}
+
+@media (max-width: 600px) {
+  .page-content {
+    padding: 12px;
+  }
 }

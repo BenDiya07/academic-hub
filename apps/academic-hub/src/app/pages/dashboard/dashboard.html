@@ -1,11 +1,7 @@
 <section class="hero">
   <div class="hero-overlay">
-
     <div class="hero-content">
-
-      <h1>
-        Welcome to Academic Hub
-      </h1>
+      <h1>Welcome to Academic Hub</h1>
 
       <p>
         Connect with students, collaborate on projects,
@@ -13,7 +9,6 @@
       </p>
 
       <div class="hero-actions">
-
         <button
           pButton
           label="Explore Projects"
@@ -27,122 +22,140 @@
           class="p-button-outlined p-button-lg community-btn"
           routerLink="/communities">
         </button>
-
       </div>
-
     </div>
-
   </div>
 </section>
 
-<section class="stats-section">
-
-  <div class="stats-grid">
-
-    <div class="stat-card">
-      <i class="pi pi-users"></i>
-      <h2>2,547</h2>
-      <p>Active Students</p>
-      <span>+124 this month</span>
-    </div>
-
-    <div class="stat-card">
-      <i class="pi pi-book"></i>
-      <h2>138</h2>
-      <p>Communities</p>
-      <span>+12 new communities</span>
-    </div>
-
-    <div class="stat-card">
-      <i class="pi pi-briefcase"></i>
-      <h2>412</h2>
-      <p>Projects</p>
-      <span>+38 ongoing projects</span>
-    </div>
-
-    <div class="stat-card">
-      <i class="pi pi-comments"></i>
-      <h2>18,920</h2>
-      <p>Discussions</p>
-      <span>+530 this week</span>
-    </div>
-
+@if (error()) {
+  <div class="dashboard-error">
+    <i class="pi pi-exclamation-circle"></i>
+    <span>{{ error() }}</span>
   </div>
+}
 
+<section class="stats-section">
+  @if (loading() && !stats()) {
+    <div class="dashboard-loading">
+      <i class="pi pi-spin pi-spinner"></i>
+      <span>Loading statistics…</span>
+    </div>
+  } @else if (stats(); as counts) {
+    <div class="stats-grid">
+      <div class="stat-card">
+        <i class="pi pi-users"></i>
+        <h2>{{ formatCount(counts.students) }}</h2>
+        <p>Students</p>
+        <span>Registered members</span>
+      </div>
+
+      <div class="stat-card">
+        <i class="pi pi-book"></i>
+        <h2>{{ formatCount(counts.communities) }}</h2>
+        <p>Communities</p>
+        <span>Active academic hubs</span>
+      </div>
+
+      <div class="stat-card">
+        <i class="pi pi-briefcase"></i>
+        <h2>{{ formatCount(counts.projects) }}</h2>
+        <p>Projects</p>
+        <span>Ideas in progress</span>
+      </div>
+
+      <div class="stat-card">
+        <i class="pi pi-comments"></i>
+        <h2>{{ formatCount(counts.discussions) }}</h2>
+        <p>Discussions</p>
+        <span>Community threads</span>
+      </div>
+    </div>
+  }
 </section>
 
 <section class="main-grid">
-
-  <!-- LEFT: Trending Projects -->
   <div class="panel">
-
     <div class="panel-header">
       <h3>Trending Projects</h3>
       <a routerLink="/projects">View all</a>
     </div>
 
     <div class="card-list">
-
-      <a class="list-card" routerLink="/projects">
-        <div class="avatar"></div>
-        <div>
-          <h4>AI Study Assistant</h4>
-          <p>Machine learning tool for students</p>
+      @if (loading()) {
+        <div class="panel-state"><i class="pi pi-spin pi-spinner"></i> Loading projects…</div>
+      } @else if (trendingProjects().length === 0) {
+        <div class="panel-state">
+          <i class="pi pi-briefcase"></i>
+          No projects yet.
+          <a routerLink="/projects">Create the first one</a>
         </div>
-      </a>
-
-      <a class="list-card" routerLink="/communities">
-        <div class="avatar"></div>
-        <div>
-          <h4>Campus Social Network</h4>
-          <p>Connect students across universities</p>
-        </div>
-      </a>
-
-      <a class="list-card" routerLink="/projects">
-        <div class="avatar"></div>
-        <div>
-          <h4>Smart Library System</h4>
-          <p>Digital library management platform</p>
-        </div>
-      </a>
-
+      } @else {
+        @for (project of trendingProjects(); track project.id) {
+          <a class="list-card" [routerLink]="['/projects', project.id]">
+            <div class="avatar" [style.background-image]="project.image ? 'url(' + project.image + ')' : null"></div>
+            <div class="list-card-body">
+              <h4>{{ project.title }}</h4>
+              <p>{{ project.description || 'No description provided.' }}</p>
+              <span class="list-card-meta">
+                {{ project.views }} views · {{ project.membersCount }} members
+              </span>
+            </div>
+          </a>
+        }
+      }
     </div>
   </div>
 
-  <!-- RIGHT: Communities + Discussions -->
   <div class="side-grid">
-
     <div class="panel">
-
       <div class="panel-header">
         <h3>Popular Communities</h3>
         <a routerLink="/communities">Explore</a>
       </div>
 
       <div class="mini-list">
-        <a class="mini-item" routerLink="/communities">💻 Computer Science</a>
-        <a class="mini-item" routerLink="/communities">📊 Data Science</a>
-        <a class="mini-item" routerLink="/communities">🎨 Design & UX</a>
+        @if (popularCommunities().length === 0) {
+          <div class="panel-state">
+            <i class="pi pi-users"></i>
+            No communities yet.
+          </div>
+        } @else {
+          @for (community of popularCommunities(); track community.id) {
+            <a class="mini-item" routerLink="/communities">
+              <i class="pi pi-users"></i>
+              <span>{{ community.name }}</span>
+              <small>{{ community.members }} members</small>
+            </a>
+          }
+        }
       </div>
-
     </div>
 
     <div class="panel">
-
       <div class="panel-header">
         <h3>Recent Discussions</h3>
-        <a routerLink="/chat">Forum</a>
+        <a routerLink="/feed">Open feed</a>
       </div>
 
       <div class="mini-list">
-        <a class="mini-item" routerLink="/chat">“Best tools for final year projects?”</a>
-        <a class="mini-item" routerLink="/chat">“How to prepare for AWS certification?”</a>
-        <a class="mini-item" routerLink="/chat">“UI/UX tips for beginners”</a>
+        @if (recentDiscussions().length === 0) {
+          <div class="panel-state">
+            <i class="pi pi-comments"></i>
+            No discussions yet.
+            <a routerLink="/feed">Start one</a>
+          </div>
+        } @else {
+          @for (post of recentDiscussions(); track post.id) {
+            <a class="mini-item discussion-item" routerLink="/feed">
+              <i class="pi pi-comment"></i>
+              <span class="discussion-body">
+                <span class="discussion-text">{{ post.content }}</span>
+                <small>{{ post.authorName }} · {{ timeAgo(post.createdAt) }}</small>
+              </span>
+            </a>
+          }
+        }
       </div>
-
     </div>
-
   </div>
-
 </section>

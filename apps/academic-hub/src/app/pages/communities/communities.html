@@ -1,1 +1,226 @@
-<p>communities works!</p>
+<div class="communities-container">
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Communities</h1>
+      <p>Join academic communities, connect with experts, and collaborate with students worldwide.</p>
+
+      <div class="hero-actions">
+        <button
+          pButton
+          label="Explore Hubs"
+          class="p-button-lg explore-btn"
+          (click)="scrollToCommunities()">
+        </button>
+        <button
+          pButton
+          label="Browse All Hubs"
+          class="p-button-lg p-button-outlined"
+          severity="help"
+          (click)="scrollToCommunities()">
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div class="stats-bar">
+    <div class="stats-grid">
+      @for (stat of stats(); track stat.label) {
+        <div class="stat-card">
+          <i class="stat-icon {{ stat.icon }}"></i>
+          <p class="stat-label">{{ stat.label }}</p>
+          <p class="stat-value">{{ stat.value | number }}</p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <section class="search-filter-section">
+    <div class="search-box">
+      <input
+        pInputText
+        type="text"
+        placeholder="Search communities, topics or categories..."
+        [ngModel]="searchText()"
+        (ngModelChange)="searchText.set($event)"
+        class="search-input" />
+    </div>
+
+    <div class="filter-chips">
+      @for (category of categories(); track category) {
+        <button
+          type="button"
+          class="filter-chip"
+          [class.active-filter]="selectedCategory() === category"
+          [attr.aria-pressed]="selectedCategory() === category"
+          (click)="selectCategory(category)">
+          {{ category }}
+        </button>
+      }
+    </div>
+  </section>
+
+  @if (error()) {
+    <div class="communities-error">
+      <i class="pi pi-exclamation-circle"></i>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
+  <div class="communities-layout">
+    <div class="main-content-flow">
+      <!-- CTA CREATE CARD -->
+      <p-card class="create-community-banner mb-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3>Create Your Own Community</h3>
+            <p>Start a hub around your passion, project or research topic.</p>
+          </div>
+          <button pButton icon="pi pi-plus" (click)="showCreateDialog.set(true)">Create Community</button>
+        </div>
+      </p-card>
+
+      <div class="section-header">
+        <h2 id="communities-list">Community Hubs</h2>
+      </div>
+
+      @if (loading()) {
+        <p-card class="no-results-card">
+          <p class="empty-state"><i class="pi pi-spin pi-spinner"></i> Loading communities…</p>
+        </p-card>
+      } @else if (filteredCommunities().length === 0) {
+        <p-card class="no-results-card">
+          <p class="empty-state">No communities match your search yet.</p>
+        </p-card>
+      } @else {
+        <div class="community-cards">
+          @for (community of filteredCommunities(); track community.id) {
+            <p-card class="community-card">
+              <div
+                class="card-image-header"
+                [style.backgroundImage]="community.image ? 'url(' + community.image + ')' : 'none'"></div>
+              <div class="community-card-top">
+                <p-avatar
+                  [label]="community.initials"
+                  [image]="community.image || undefined"
+                  shape="circle"
+                  size="large"></p-avatar>
+                <div class="community-meta">
+                  <div class="community-members">{{ community.members | number }} Members</div>
+                  <span class="community-category">{{ community.category }}</span>
+                </div>
+              </div>
+
+              <h3 class="community-name">{{ community.name }}</h3>
+              <p class="community-description">{{ community.description }}</p>
+
+              <div class="community-actions">
+                <button
+                  pButton
+                  [label]="isJoining(community.id) ? 'Saving…' : community.joined ? 'Leave' : 'Join'"
+                  [severity]="community.joined ? 'success' : 'secondary'"
+                  [disabled]="isJoining(community.id)"
+                  [attr.aria-label]="(community.joined ? 'Leave ' : 'Join ') + community.name"
+                  (click)="toggleJoin(community)">
+                </button>
+              </div>
+            </p-card>
+          }
+        </div>
+      }
+    </div>
+
+    <aside class="sidebar">
+      <p-card header="Popular Categories" class="sidebar-modern-card">
+        @if (categoryCounts().length === 0) {
+          <p class="sidebar-empty">Categories will appear as communities are created.</p>
+        } @else {
+          <div class="category-list">
+            @for (category of categoryCounts(); track category.name) {
+              <button
+                type="button"
+                class="category-row"
+                [class.active]="selectedCategory() === category.name"
+                (click)="selectCategory(category.name)">
+                <span class="category-name">
+                  <i class="pi pi-tag"></i>
+                  {{ category.name }}
+                </span>
+                <span class="category-count">{{ category.count }}</span>
+              </button>
+            }
+          </div>
+        }
+      </p-card>
+
+      <p-card header="Community Guidelines" class="sidebar-modern-card mt-6">
+        <ul class="guideline-list">
+          <li><i class="pi pi-check-circle"></i> Be respectful and constructive.</li>
+          <li><i class="pi pi-check-circle"></i> Share sources and cite your work.</li>
+          <li><i class="pi pi-check-circle"></i> Keep discussions relevant to the hub.</li>
+          <li><i class="pi pi-check-circle"></i> Report spam or abusive content.</li>
+        </ul>
+      </p-card>
+
+      <p-card class="sidebar-cta mt-6">
+        <h3>Start your own hub</h3>
+        <p>Bring together students who share your research interests or project goals.</p>
+        <button
+          pButton
+          label="Create Community"
+          icon="pi pi-plus"
+          class="w-full"
+          (click)="showCreateDialog.set(true)">
+        </button>
+      </p-card>
+    </aside>
+  </div>
+
+  <p-dialog
+    [visible]="showCreateDialog()"
+    (visibleChange)="showCreateDialog.set($event)"
+    [modal]="true"
+    [style]="{ width: '450px' }"
+    header="Create Community">
+
+    <div class="dialog-body">
+      <label class="input-label" for="community-name">Community Name</label>
+      <input
+        id="community-name"
+        pInputText
+        [ngModel]="newCommunityName()"
+        (ngModelChange)="newCommunityName.set($event)"
+        placeholder="Enter a community name" />
+
+      <label class="input-label" for="community-description">Description</label>
+      <textarea
+        id="community-description"
+        pInputTextarea
+        rows="4"
+        [ngModel]="newCommunityDescription()"
+        (ngModelChange)="newCommunityDescription.set($event)"
+        placeholder="Describe what this community is about"></textarea>
+
+      <label class="input-label" for="community-category">Category</label>
+      <select
+        id="community-category"
+        [ngModel]="newCommunityCategory()"
+        (ngModelChange)="newCommunityCategory.set($event)"
+        class="select-input">
+        <option value="">General</option>
+        @for (category of categories(); track category) {
+          @if (category !== 'All') {
+            <option [value]="category">{{ category }}</option>
+          }
+        }
+      </select>
+    </div>
+
+    <div class="dialog-footer">
+      <button
+        pButton
+        severity="primary"
+        [disabled]="!newCommunityName().trim() || submitting()"
+        (click)="createCommunity()">Create</button>
+    </div>
+  </p-dialog>
+</div>

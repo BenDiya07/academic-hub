@@ -552,3 +552,16 @@
     width: 100%;
   }
 }
+
+.projects-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 0.9rem;
+  margin: 1rem auto;
+  max-width: 1200px;
+}

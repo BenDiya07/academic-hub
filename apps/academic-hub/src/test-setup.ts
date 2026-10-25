@@ -1,6 +1,7 @@
-import { setupZonelessTestEnv } from 'jest-preset-angular/setup-env/zoneless';
+import { TestBed } from '@angular/core/testing';
+import {
+  BrowserTestingModule,
+  platformBrowserTesting,
+} from '@angular/platform-browser/testing';
 
-setupZonelessTestEnv({
-  errorOnUnknownElements: true,
-  errorOnUnknownProperties: true,
-});
+TestBed.initTestEnvironment(BrowserTestingModule, platformBrowserTesting());

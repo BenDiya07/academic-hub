@@ -6,7 +6,7 @@
       <p>Discover innovative student projects, join teams and build your portfolio.</p>
       <div class="hero-buttons">
         <p-button
-          (click)="showCreateDialog.set(true)"
+          (onClick)="showCreateDialog.set(true)"
           label="Create Project"
           icon="pi pi-plus"
           [rounded]="true"
@@ -17,7 +17,8 @@
           icon="pi pi-search"
           [rounded]="true"
           severity="info"
-          [text]="true">
+          [text]="true"
+          (onClick)="scrollToProjects()">
         </p-button>
       </div>
     </div>
@@ -27,7 +28,7 @@
   <div class="stats-section">
     @for (stat of stats(); track stat.label) {
       <div class="stat-card">
-        <span class="stat-icon">{{ stat.icon }}</span>
+        <span class="stat-icon"><i [class]="stat.icon"></i></span>
         <p class="stat-label">{{ stat.label }}</p>
         <p class="stat-value">{{ stat.value | number }}</p>
       </div>
@@ -56,19 +57,30 @@
     </div>
   </div>
 
+  @if (error()) {
+    <div class="projects-error">
+      <i class="pi pi-exclamation-circle"></i>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
   <!-- MAIN CONTENT SECTION -->
   <div class="main-content">
     <!-- PROJECTS GRID -->
     <div class="projects-section">
-      <h2 class="section-title">{{ selectedFilter() === 'All' ? 'All Projects' : selectedFilter() + ' Projects' }}</h2>
+      <h2 class="section-title" id="projects-list">{{ selectedFilter() === 'All' ? 'All Projects' : selectedFilter() + ' Projects' }}</h2>
 
-      @if (filteredProjects.length === 0) {
+      @if (loading()) {
+        <p-card class="no-projects">
+          <p class="text-center"><i class="pi pi-spin pi-spinner"></i> Loading projects…</p>
+        </p-card>
+      } @else if (filteredProjects().length === 0) {
         <p-card class="no-projects">
           <p class="text-center">No projects found. Be the first to create one!</p>
         </p-card>
       } @else {
         <div class="projects-grid">
-          @for (project of filteredProjects; track project.id) {
+          @for (project of filteredProjects(); track project.id) {
             <p-card class="project-card">
               <div
                 class="project-cover"
@@ -91,8 +103,8 @@
                 <div class="owner-info">
                   <strong>Owner:</strong>
                   <div class="owner-badge">
-                    <span class="owner-avatar">{{ project.owner.avatar }}</span>
-                    <span>{{ project.owner.name }}</span>
+                    <span class="owner-avatar">{{ project.ownerInitials }}</span>
+                    <span>{{ project.ownerName }}</span>
                   </div>
                 </div>
 
@@ -106,19 +118,14 @@
                 </div>
 
                 <div class="team-avatars">
-                  <div class="avatar-group">
-                    @for (avatar of project.membersAvatars; track avatar) {
-                      <p-avatar [label]="avatar" shape="circle" size="normal" styleClass="member-avatar"></p-avatar>
-                    }
-                  </div>
-                  <span class="member-count">{{ project.members }} members</span>
+                  <span class="member-count"><i class="pi pi-users"></i> {{ project.membersCount }} members</span>
                 </div>
 
                 <p-divider></p-divider>
 
                 <div class="project-stats">
                   <div class="progress-container">
-                    <label class="progress-label">Progress: {{ project.progress }}%</label>
+                    <span class="progress-label">Progress: {{ project.progress }}%</span>
                     <p-progressBar [value]="project.progress"></p-progressBar>
                   </div>
 
@@ -134,12 +141,13 @@
                     label="View Project"
                     icon="pi pi-eye"
                     severity="primary"
-                    (click)="viewProject(project.id)">
+                    (onClick)="viewProject(project.id)">
                   </p-button>
                   <p-button
-                    label="Join Team"
-                    icon="pi pi-user-plus"
-                    severity="secondary">
+                    [label]="project.isMember ? 'Joined' : 'Join Team'"
+                    [icon]="project.isMember ? 'pi pi-check' : 'pi pi-user-plus'"
+                    [severity]="project.isMember ? 'success' : 'secondary'"
+                    (onClick)="toggleMembership(project)">
                   </p-button>
                 </div>
               </div>
@@ -156,8 +164,8 @@
         <p class="card-title">Trending Projects</p>
 
         <div class="trending-list">
-          @for (project of trendingProjects; track project.id) {
-            <div class="trending-item">
+          @for (project of trendingProjects(); track project.id) {
+            <div class="trending-item" (click)="viewProject(project.id)" role="button" tabindex="0" (keydown.enter)="viewProject(project.id)">
               <p class="trending-title">{{ project.title }}</p>
               <p class="trending-views">+{{ project.views }} views</p>
             </div>
@@ -172,7 +180,7 @@
         <div class="categories-list">
           @for (category of categories(); track category.name) {
             <div class="category-item">
-              <span class="category-icon">{{ category.icon }}</span>
+              <span class="category-icon"><i [class]="category.icon"></i></span>
               <div class="category-info">
                 <p class="category-name">{{ category.name }}</p>
                 <p class="category-count">{{ category.count }} projects</p>
@@ -193,57 +201,49 @@
     [blockScroll]="true">
     <div class="dialog-content">
       <div class="form-group">
-        <label>Project Name *</label>
+        <label for="project-name">Project Name *</label>
         <input
           pInputText
-          [(ngModel)]="newProject().name"
+          id="project-name"
+          [(ngModel)]="newProjectTitle"
           placeholder="Enter project name"
           class="w-full" />
       </div>
 
       <div class="form-group">
-        <label>Description</label>
+        <label for="project-description">Description</label>
         <textarea
           pInputTextarea
-          [(ngModel)]="newProject().description"
+          id="project-description"
+          [(ngModel)]="newProjectDescription"
           placeholder="Describe your project"
           rows="4"
           class="w-full"></textarea>
       </div>
 
       <div class="form-group">
-        <label>Technologies (comma-separated)</label>
+        <label for="project-technologies">Technologies (comma-separated)</label>
         <input
           pInputText
-          [(ngModel)]="newProject().technologies"
+          id="project-technologies"
+          [(ngModel)]="newProjectTechnologies"
           placeholder="e.g., Angular, AWS, Python"
           class="w-full" />
-      </div>
-
-      <div class="form-group">
-        <label>Visibility</label>
-        <p-select
-          [(ngModel)]="newProject().visibility"
-          [options]="[
-            { label: 'Public', value: 'Public' },
-            { label: 'Private', value: 'Private' },
-            { label: 'Team Only', value: 'Team Only' }
-          ]"
-          class="w-full">
-        </p-select>
       </div>
     </div>
 
     <ng-template pTemplate="footer">
       <p-button
         label="Cancel"
-        (click)="showCreateDialog.set(false)"
+        (onClick)="showCreateDialog.set(false)"
         severity="secondary">
       </p-button>
       <p-button
         label="Create"
-        (click)="createProject()"
-        [disabled]="!newProject().name.trim()">
+        icon="pi pi-plus"
+        (onClick)="createProject()"
+        [loading]="submitting()"
+        [disabled]="!newProjectTitle().trim() || submitting()">
       </p-button>
     </ng-template>
   </p-dialog>

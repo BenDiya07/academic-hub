@@ -13,7 +13,11 @@
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
-    "paths": {}
+    "paths": {
+      "@academic-hub/shared-models": ["./shared-models/src/index.ts"],
+      "@academic-hub/data-access": ["./data-access/src/index.ts"],
+      "@academic-hub/ui": ["./ui/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

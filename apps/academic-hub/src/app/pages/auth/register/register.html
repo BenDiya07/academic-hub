@@ -1,0 +1,117 @@
+<div class="auth-wrapper">
+  <p-card class="auth-card">
+    @if (confirmationSent()) {
+      <div class="auth-header">
+        <div class="auth-logo">📩</div>
+        <h1>Check your email</h1>
+        <p>
+          We sent a confirmation link to <strong>{{ email() }}</strong>.
+          Click it to activate your account.
+        </p>
+      </div>
+      <p-button
+        label="Back to sign in"
+        icon="pi pi-arrow-left"
+        styleClass="w-full"
+        routerLink="/login">
+      </p-button>
+    } @else {
+      <div class="auth-header">
+        <div class="auth-logo">🎓</div>
+        <h1>Create your account</h1>
+        <p>Join the Academic Hub community</p>
+      </div>
+
+      <form class="auth-form" (ngSubmit)="submit()">
+        <div class="field">
+          <label for="fullName">Full name</label>
+          <input
+            pInputText
+            id="fullName"
+            type="text"
+            placeholder="Jane Doe"
+            [ngModel]="fullName()"
+            (ngModelChange)="fullName.set($event)"
+            name="fullName"
+            autocomplete="name"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input
+            pInputText
+            id="email"
+            type="email"
+            placeholder="you@university.edu"
+            [ngModel]="email()"
+            (ngModelChange)="email.set($event)"
+            name="email"
+            autocomplete="email"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <p-password
+            id="password"
+            [ngModel]="password()"
+            (ngModelChange)="password.set($event)"
+            name="password"
+            placeholder="At least 6 characters"
+            [toggleMask]="true"
+            autocomplete="new-password"
+            required
+            styleClass="w-full">
+          </p-password>
+        </div>
+
+        @if (error) {
+          <div class="auth-error">
+            <i class="pi pi-exclamation-circle"></i>
+            <span>{{ error }}</span>
+          </div>
+        }
+
+        <p-button
+          type="submit"
+          label="Create account"
+          icon="pi pi-user-plus"
+          styleClass="w-full"
+          [loading]="loading"
+          [disabled]="loading">
+        </p-button>
+      </form>
+
+      <p-divider align="center" type="solid">
+        <span class="divider-label">or continue with</span>
+      </p-divider>
+
+      <div class="oauth-buttons">
+        <p-button
+          label="Google"
+          icon="pi pi-google"
+          severity="secondary"
+          [outlined]="true"
+          styleClass="w-full"
+          (onClick)="signInWith('google')">
+        </p-button>
+        <p-button
+          label="GitHub"
+          icon="pi pi-github"
+          severity="secondary"
+          [outlined]="true"
+          styleClass="w-full"
+          (onClick)="signInWith('github')">
+        </p-button>
+      </div>
+
+      <p class="auth-switch">
+        Already have an account?
+        <a routerLink="/login">Sign in</a>
+      </p>
+    }
+  </p-card>
+</div>

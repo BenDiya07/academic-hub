@@ -1,1 +1,159 @@
-<p>settings works!</p>
+<div class="settings-container">
+  <div class="settings-header">
+    <div>
+      <h1>Settings</h1>
+      <p>Manage your account details, security and session.</p>
+    </div>
+    <p-button
+      label="Edit profile"
+      icon="pi pi-user-edit"
+      severity="secondary"
+      [outlined]="true"
+      routerLink="/profile">
+    </p-button>
+  </div>
+
+  <div class="settings-grid">
+    <p-card class="settings-card">
+      <div class="card-heading">
+        <i class="pi pi-user"></i>
+        <div>
+          <h2>Account</h2>
+          <p>Your current identity on Academic Hub.</p>
+        </div>
+      </div>
+
+      <p-divider></p-divider>
+
+      <div class="account-row">
+        <span class="account-label">Name</span>
+        <span class="account-value">{{ displayName() || 'Not set' }}</span>
+      </div>
+      <div class="account-row">
+        <span class="account-label">Email</span>
+        <span class="account-value">{{ currentEmail() || 'Not set' }}</span>
+      </div>
+
+      <p class="hint">To change your name, department or bio, use the profile editor.</p>
+    </p-card>
+
+    <p-card class="settings-card">
+      <div class="card-heading">
+        <i class="pi pi-envelope"></i>
+        <div>
+          <h2>Email address</h2>
+          <p>We will send a confirmation link before applying the change.</p>
+        </div>
+      </div>
+
+      <p-divider></p-divider>
+
+      @if (emailError()) {
+        <p-message severity="error" [text]="emailError() ?? ''" styleClass="w-full"></p-message>
+      }
+      @if (emailSuccess()) {
+        <p-message severity="success" [text]="emailSuccess() ?? ''" styleClass="w-full"></p-message>
+      }
+
+      <form class="settings-form" (ngSubmit)="updateEmail()">
+        <label for="new-email">New email address</label>
+        <input
+          pInputText
+          id="new-email"
+          type="email"
+          name="newEmail"
+          autocomplete="email"
+          placeholder="new.address@university.edu"
+          [ngModel]="newEmail()"
+          (ngModelChange)="newEmail.set($event)" />
+
+        <p-button
+          type="submit"
+          label="Update email"
+          icon="pi pi-send"
+          [loading]="savingEmail()"
+          [disabled]="savingEmail()">
+        </p-button>
+      </form>
+    </p-card>
+
+    <p-card class="settings-card">
+      <div class="card-heading">
+        <i class="pi pi-lock"></i>
+        <div>
+          <h2>Password</h2>
+          <p>Choose a strong password you do not reuse elsewhere.</p>
+        </div>
+      </div>
+
+      <p-divider></p-divider>
+
+      @if (passwordError()) {
+        <p-message severity="error" [text]="passwordError() ?? ''" styleClass="w-full"></p-message>
+      }
+      @if (passwordSuccess()) {
+        <p-message severity="success" [text]="passwordSuccess() ?? ''" styleClass="w-full"></p-message>
+      }
+
+      <form class="settings-form" (ngSubmit)="updatePassword()">
+        <label for="new-password">New password</label>
+        <p-password
+          inputId="new-password"
+          name="password"
+          placeholder="At least 6 characters"
+          [ngModel]="password()"
+          (ngModelChange)="password.set($event)"
+          [toggleMask]="true"
+          [feedback]="false"
+          autocomplete="new-password"
+          styleClass="w-full">
+        </p-password>
+
+        <label for="confirm-password">Confirm new password</label>
+        <p-password
+          inputId="confirm-password"
+          name="passwordConfirmation"
+          placeholder="Repeat your new password"
+          [ngModel]="passwordConfirmation()"
+          (ngModelChange)="passwordConfirmation.set($event)"
+          [toggleMask]="true"
+          [feedback]="false"
+          autocomplete="new-password"
+          styleClass="w-full">
+        </p-password>
+
+        <p-button
+          type="submit"
+          label="Update password"
+          icon="pi pi-check"
+          [loading]="savingPassword()"
+          [disabled]="savingPassword()">
+        </p-button>
+      </form>
+    </p-card>
+
+    <p-card class="settings-card danger-card">
+      <div class="card-heading">
+        <i class="pi pi-sign-out"></i>
+        <div>
+          <h2>Session</h2>
+          <p>Sign out of Academic Hub on this device.</p>
+        </div>
+      </div>
+
+      <p-divider></p-divider>
+
+      <p class="hint">You will need to sign in again to access your feed, projects and messages.</p>
+
+      <p-button
+        label="Sign out"
+        icon="pi pi-sign-out"
+        severity="danger"
+        [outlined]="true"
+        [loading]="signingOut()"
+        [disabled]="signingOut()"
+        (onClick)="signOut()">
+      </p-button>
+    </p-card>
+  </div>
+</div>
