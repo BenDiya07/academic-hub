@@ -1,6 +1,10 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { AuthError } from '@supabase/supabase-js';
 
+import {
+  demoAuthenticate,
+  demoUpdateEmail,
+} from '../demo/demo-db';
 import { SupabaseService } from '../supabase/supabase.service';
 
 export interface SignUpDetails {
@@ -16,6 +20,7 @@ export class AuthService {
   private readonly loadingSignal = signal(false);
   private readonly errorSignal = signal<string | null>(null);
 
+  readonly isDemo = this.supabase.isDemo;
   readonly user = this.supabase.user;
   readonly session = this.supabase.session;
   readonly isAuthenticated = this.supabase.isAuthenticated;
@@ -39,6 +44,13 @@ export class AuthService {
   }
 
   async signIn(email: string, password: string): Promise<boolean> {
+    if (this.isDemo) {
+      return this.run(async () => {
+        const account = demoAuthenticate(email, password);
+        this.supabase.setDemoSession(account);
+      });
+    }
+
     return this.run(async () => {
       const { error } = await this.supabase.client.auth.signInWithPassword({
         email,
@@ -49,6 +61,17 @@ export class AuthService {
   }
 
   async signUp(details: SignUpDetails): Promise<boolean> {
+    if (this.isDemo) {
+      return this.run(async () => {
+        const account = demoAuthenticate(
+          details.email,
+          details.password,
+          details.fullName
+        );
+        this.supabase.setDemoSession(account);
+      });
+    }
+
     return this.run(async () => {
       const { error } = await this.supabase.client.auth.signUp({
         email: details.email,
@@ -62,6 +85,17 @@ export class AuthService {
   }
 
   async signInWithOAuth(provider: 'google' | 'github'): Promise<boolean> {
+    if (this.isDemo) {
+      return this.run(async () => {
+        const account = demoAuthenticate(
+          `${provider}.demo@academic-hub.app`,
+          'demo',
+          provider === 'google' ? 'Google Demo User' : 'GitHub Demo User'
+        );
+        this.supabase.setDemoSession(account);
+      });
+    }
+
     return this.run(async () => {
       const { error } = await this.supabase.client.auth.signInWithOAuth({
         provider,
@@ -74,6 +108,11 @@ export class AuthService {
   }
 
   async sendPasswordReset(email: string): Promise<boolean> {
+    if (this.isDemo) {
+      void email;
+      return true;
+    }
+
     return this.run(async () => {
       const { error } = await this.supabase.client.auth.resetPasswordForEmail(
         email,
@@ -86,6 +125,11 @@ export class AuthService {
   }
 
   async updatePassword(password: string): Promise<boolean> {
+    if (this.isDemo) {
+      void password;
+      return true;
+    }
+
     return this.run(async () => {
       const { error } = await this.supabase.client.auth.updateUser({ password });
       if (error) throw error;
@@ -93,6 +137,16 @@ export class AuthService {
   }
 
   async updateEmail(email: string): Promise<boolean> {
+    if (this.isDemo) {
+      return this.run(async () => {
+        const id = this.user()?.id;
+        if (!id) throw new Error('You must be signed in to update your email.');
+        const account = demoUpdateEmail(id, email);
+        if (!account) throw new Error('Unable to update your email.');
+        this.supabase.setDemoSession(account);
+      });
+    }
+
     return this.run(async () => {
       const { error } = await this.supabase.client.auth.updateUser({ email });
       if (error) throw error;
@@ -101,6 +155,12 @@ export class AuthService {
 
   async signOut(): Promise<void> {
     this.errorSignal.set(null);
+
+    if (this.isDemo) {
+      this.supabase.clearDemoSession();
+      return;
+    }
+
     await this.supabase.client.auth.signOut();
   }
 

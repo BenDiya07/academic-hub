@@ -3,6 +3,11 @@ import { inject, Injectable } from '@angular/core';
 import type { Community } from '../models';
 import { initials } from '../utils/format';
 import { AuthService } from '../auth/auth.service';
+import {
+  demoCreateCommunity,
+  demoListCommunities,
+  demoSetCommunityJoined,
+} from '../demo/demo-db';
 import { SupabaseService } from '../supabase/supabase.service';
 
 interface CommunityRow {
@@ -29,6 +34,10 @@ export class CommunitiesService {
   async list(): Promise<Community[]> {
     const currentId = this.auth.user()?.id ?? null;
 
+    if (this.supabase.isDemo) {
+      return demoListCommunities(currentId);
+    }
+
     const { data, error } = await this.supabase.client
       .from('communities')
       .select(
@@ -45,6 +54,11 @@ export class CommunitiesService {
 
   async create(input: CreateCommunityInput): Promise<void> {
     const createdBy = this.requireUserId();
+
+    if (this.supabase.isDemo) {
+      demoCreateCommunity(createdBy, input);
+      return;
+    }
 
     const { data, error } = await this.supabase.client
       .from('communities')
@@ -68,6 +82,11 @@ export class CommunitiesService {
 
   async setJoined(communityId: string, join: boolean): Promise<void> {
     const userId = this.requireUserId();
+
+    if (this.supabase.isDemo) {
+      demoSetCommunityJoined(communityId, userId, join);
+      return;
+    }
 
     const { error } = join
       ? await this.supabase.client

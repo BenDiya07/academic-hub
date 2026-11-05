@@ -23,7 +23,7 @@ import { AuthService } from '../../../core/auth/auth.service';
     PasswordModule,
   ],
   templateUrl: './register.html',
-  styleUrl: './register.css',
+  styleUrl: '../auth.css',
 })
 export class Register {
   private readonly auth = inject(AuthService);
@@ -61,6 +61,9 @@ export class Register {
   }
 
   async signInWith(provider: 'google' | 'github'): Promise<void> {
-    await this.auth.signInWithOAuth(provider);
+    const ok = await this.auth.signInWithOAuth(provider);
+    if (ok && this.auth.isAuthenticated()) {
+      this.router.navigateByUrl('/');
+    }
   }
 }

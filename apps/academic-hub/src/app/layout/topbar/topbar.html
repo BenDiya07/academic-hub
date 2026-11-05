@@ -1,7 +1,7 @@
 <header class="topbar">
   <a class="logo" routerLink="/">
-    <span class="logo-mark">🎓</span>
-    <span class="logo-text">Academic Hub</span>
+    <span class="logo-mark"><i class="pi pi-sparkles"></i></span>
+    <span class="logo-text">Academic <strong>Hub</strong></span>
   </a>
 
   <form class="search-box" (ngSubmit)="submitSearch()" role="search">
@@ -20,22 +20,27 @@
     <nav class="nav-icons" aria-label="Main navigation">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Dashboard" aria-label="Dashboard">
         <i class="pi pi-home"></i>
+        <span>Home</span>
       </a>
 
       <a routerLink="/feed" routerLinkActive="active" title="Feed" aria-label="Feed">
         <i class="pi pi-megaphone"></i>
+        <span>Feed</span>
       </a>
 
       <a routerLink="/projects" routerLinkActive="active" title="Projects" aria-label="Projects">
         <i class="pi pi-briefcase"></i>
+        <span>Projects</span>
       </a>
 
       <a routerLink="/communities" routerLinkActive="active" title="Communities" aria-label="Communities">
         <i class="pi pi-users"></i>
+        <span>Communities</span>
       </a>
 
       <a routerLink="/chat" routerLinkActive="active" title="Messages" aria-label="Messages">
         <i class="pi pi-comments"></i>
+        <span>Messages</span>
       </a>
     </nav>
 

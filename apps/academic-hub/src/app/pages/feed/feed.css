@@ -12,6 +12,7 @@
 .feed-header h1 {
   font-size: 2rem;
   font-weight: 700;
+  letter-spacing: -0.045em;
   margin-bottom: 0.5rem;
   color: #0f172a;
 }
@@ -112,7 +113,7 @@
 
 .comments-state i {
   font-size: 1.4rem;
-  color: #a5b4fc;
+  color: #9ab6a2;
 }
 
 .comment-item {
@@ -218,12 +219,12 @@
 
 .tag-chip {
   background: #f1f5f9 !important;
-  color: #4f46e5 !important;
+  color: #416d50 !important;
   font-weight: 500;
 }
 
 .tag-chip:hover {
-  background: #eef2ff !important;
+  background: #eaf2eb !important;
 }
 
 /* POST FOOTER */
@@ -297,4 +298,3 @@
     width: 100%;
   }
 }
-

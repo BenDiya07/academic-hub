@@ -23,7 +23,7 @@ import { AuthService } from '../../../core/auth/auth.service';
     PasswordModule,
   ],
   templateUrl: './login.html',
-  styleUrl: './login.css',
+  styleUrl: '../auth.css',
 })
 export class Login {
   private readonly auth = inject(AuthService);
@@ -32,6 +32,15 @@ export class Login {
 
   email = signal('');
   password = signal('');
+
+  readonly demoMode = this.auth.isDemo;
+
+  constructor() {
+    if (this.auth.isDemo) {
+      this.email.set('demo@academic-hub.app');
+      this.password.set('demo1234');
+    }
+  }
 
   get loading(): boolean {
     return this.auth.loading();
@@ -49,7 +58,10 @@ export class Login {
   }
 
   async signInWith(provider: 'google' | 'github'): Promise<void> {
-    await this.auth.signInWithOAuth(provider);
+    const ok = await this.auth.signInWithOAuth(provider);
+    if (ok && this.auth.isAuthenticated()) {
+      this.redirectAfter();
+    }
   }
 
   private redirectAfter(): void {
@@ -57,4 +69,3 @@ export class Login {
     this.router.navigateByUrl(redirectTo || '/');
   }
 }
-

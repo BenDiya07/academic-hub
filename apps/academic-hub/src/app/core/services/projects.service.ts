@@ -3,6 +3,12 @@ import { inject, Injectable } from '@angular/core';
 import type { Project, ProjectDetail, ProjectStatus } from '../models';
 import { initials } from '../utils/format';
 import { AuthService } from '../auth/auth.service';
+import {
+  demoCreateProject,
+  demoGetProject,
+  demoListProjects,
+  demoSetProjectMembership,
+} from '../demo/demo-db';
 import { SupabaseService } from '../supabase/supabase.service';
 
 interface OwnerLite {
@@ -50,6 +56,10 @@ export class ProjectsService {
   async list(): Promise<Project[]> {
     const currentId = this.auth.user()?.id ?? null;
 
+    if (this.supabase.isDemo) {
+      return demoListProjects(currentId);
+    }
+
     const { data, error } = await this.supabase.client
       .from('projects')
       .select(PROJECT_SELECT)
@@ -64,6 +74,10 @@ export class ProjectsService {
 
   async getById(id: string): Promise<ProjectDetail | null> {
     const currentId = this.auth.user()?.id ?? null;
+
+    if (this.supabase.isDemo) {
+      return demoGetProject(id, currentId);
+    }
 
     const { data, error } = await this.supabase.client
       .from('projects')
@@ -88,6 +102,11 @@ export class ProjectsService {
   async create(input: CreateProjectInput): Promise<void> {
     const ownerId = this.requireUserId();
 
+    if (this.supabase.isDemo) {
+      demoCreateProject(ownerId, input);
+      return;
+    }
+
     const { data, error } = await this.supabase.client
       .from('projects')
       .insert({
@@ -111,6 +130,11 @@ export class ProjectsService {
 
   async setMembership(projectId: string, join: boolean): Promise<void> {
     const userId = this.requireUserId();
+
+    if (this.supabase.isDemo) {
+      demoSetProjectMembership(projectId, userId, join);
+      return;
+    }
 
     const { error } = join
       ? await this.supabase.client
