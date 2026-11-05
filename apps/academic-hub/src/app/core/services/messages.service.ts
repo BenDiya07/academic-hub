@@ -1,8 +1,18 @@
 import { inject, Injectable } from '@angular/core';
 
+import type { ChatMessage, ChatUser } from '../models';
 import { initials } from '../utils/format';
 import { AuthService } from '../auth/auth.service';
+import {
+  demoListConversation,
+  demoListInbox,
+  demoListUsers,
+  demoMarkConversationRead,
+  demoSendMessage,
+} from '../demo/demo-db';
 import { SupabaseService } from '../supabase/supabase.service';
+
+export type { ChatMessage, ChatUser } from '../models';
 
 interface ProfileRow {
   id: string;
@@ -21,23 +31,6 @@ interface MessageRow {
   created_at: string;
 }
 
-export interface ChatUser {
-  id: string;
-  name: string;
-  initials: string;
-  avatarUrl: string | null;
-  role: string | null;
-}
-
-export interface ChatMessage {
-  id: string;
-  senderId: string;
-  recipientId: string;
-  content: string;
-  read: boolean;
-  createdAt: string;
-}
-
 @Injectable({ providedIn: 'root' })
 export class MessagesService {
   private readonly supabase = inject(SupabaseService);
@@ -45,6 +38,10 @@ export class MessagesService {
 
   async listUsers(): Promise<ChatUser[]> {
     const currentId = this.requireUserId();
+
+    if (this.supabase.isDemo) {
+      return demoListUsers(currentId);
+    }
 
     const { data, error } = await this.supabase.client
       .from('profiles')
@@ -61,6 +58,10 @@ export class MessagesService {
   async listInbox(): Promise<ChatMessage[]> {
     const currentId = this.requireUserId();
 
+    if (this.supabase.isDemo) {
+      return demoListInbox(currentId);
+    }
+
     const { data, error } = await this.supabase.client
       .from('messages')
       .select('id, sender_id, recipient_id, content, read, created_at')
@@ -76,6 +77,10 @@ export class MessagesService {
   async listConversation(userId: string): Promise<ChatMessage[]> {
     const currentId = this.requireUserId();
     if (userId === currentId) return [];
+
+    if (this.supabase.isDemo) {
+      return demoListConversation(currentId, userId);
+    }
 
     const { data, error } = await this.supabase.client
       .from('messages')
@@ -94,6 +99,11 @@ export class MessagesService {
   async send(recipientId: string, content: string): Promise<void> {
     const senderId = this.requireUserId();
 
+    if (this.supabase.isDemo) {
+      demoSendMessage(senderId, recipientId, content);
+      return;
+    }
+
     const { error } = await this.supabase.client.from('messages').insert({
       sender_id: senderId,
       recipient_id: recipientId,
@@ -106,6 +116,11 @@ export class MessagesService {
   async markConversationRead(userId: string): Promise<void> {
     const currentId = this.requireUserId();
 
+    if (this.supabase.isDemo) {
+      demoMarkConversationRead(currentId, userId);
+      return;
+    }
+
     const { error } = await this.supabase.client
       .from('messages')
       .update({ read: true })
@@ -117,7 +132,7 @@ export class MessagesService {
   }
 
   subscribeToMessages(onChange: () => void): () => void {
-    if (!this.auth.isAuthenticated()) {
+    if (this.supabase.isDemo || !this.auth.isAuthenticated()) {
       return () => undefined;
     }
 

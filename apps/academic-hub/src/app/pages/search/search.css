@@ -7,7 +7,8 @@
 .search-header h1 {
   margin: 0 0 0.35rem;
   font-size: 2rem;
-  font-weight: 800;
+  font-weight: 700;
+  letter-spacing: -0.045em;
   color: #0f172a;
 }
 
@@ -43,7 +44,7 @@
 
 .search-state i {
   font-size: 2.2rem;
-  color: #a5b4fc;
+  color: #9ab6a2;
 }
 
 .search-error {
@@ -72,7 +73,7 @@
 }
 
 .result-group h2 i {
-  color: #4f46e5;
+  color: #416d50;
 }
 
 .result-list {
@@ -101,14 +102,14 @@
 }
 
 .result-heading a:hover {
-  color: #4f46e5;
+  color: #416d50;
 }
 
 .result-badge {
   padding: 0.15rem 0.65rem;
   border-radius: 999px;
-  background: #eef2ff;
-  color: #4f46e5;
+  background: #eaf2eb;
+  color: #416d50;
   font-size: 0.75rem;
   font-weight: 700;
   white-space: nowrap;

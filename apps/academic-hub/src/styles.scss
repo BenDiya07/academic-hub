@@ -2,9 +2,132 @@
 @tailwind components;
 @tailwind utilities;
 
-/* You can add global styles to this file, and also import other style files */
 @import "primeicons/primeicons.css";
+
+:root {
+  color-scheme: light;
+  --hub-ink: #1d2b22;
+  --hub-muted: #748078;
+  --hub-brand: #416d50;
+  --hub-brand-dark: #31583e;
+  --hub-brand-soft: #eaf2eb;
+  --hub-border: #e5ebe6;
+  --hub-surface: #ffffff;
+  --hub-canvas: #f5f7f5;
+  --hub-shadow: 0 12px 32px rgba(27, 46, 34, 0.06);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: var(--hub-canvas);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--hub-canvas);
+  color: var(--hub-ink);
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(65, 109, 80, 0.35);
+  outline-offset: 3px;
+}
 
 p-password .p-password-input {
   width: 100%;
+}
+
+p-card {
+  display: block;
+}
+
+.p-card {
+  border: 1px solid var(--hub-border);
+  border-radius: 16px;
+  background: var(--hub-surface);
+  box-shadow: var(--hub-shadow);
+}
+
+.p-card .p-card-body {
+  padding: 1.35rem;
+}
+
+.p-inputtext,
+.p-textarea,
+textarea,
+select {
+  border-color: #dce5de;
+  border-radius: 10px;
+}
+
+.p-inputtext:enabled:focus,
+.p-textarea:enabled:focus,
+textarea:focus,
+select:focus {
+  border-color: #90ad98;
+  box-shadow: 0 0 0 3px rgba(65, 109, 80, 0.1);
+}
+
+.p-button {
+  border-radius: 10px;
+  font-weight: 650;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+}
+
+.p-button:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+.p-button:not(.p-button-outlined):not(.p-button-text):not(.p-button-secondary) {
+  border-color: var(--hub-brand);
+  background: var(--hub-brand);
+}
+
+.p-button:not(.p-button-outlined):not(.p-button-text):not(.p-button-secondary):hover {
+  border-color: var(--hub-brand-dark);
+  background: var(--hub-brand-dark);
+}
+
+.p-avatar {
+  background: #e7f0e9;
+  color: #416d50;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

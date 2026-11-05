@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "buildCommand": "npx nx build academic-hub --configuration=production",
+  "outputDirectory": "dist/apps/academic-hub/browser",
+  "installCommand": "npm ci",
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

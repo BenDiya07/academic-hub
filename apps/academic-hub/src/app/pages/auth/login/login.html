@@ -1,86 +1,124 @@
-<div class="auth-wrapper">
-  <p-card class="auth-card">
-    <div class="auth-header">
-      <div class="auth-logo">🎓</div>
-      <h1>Welcome back</h1>
-      <p>Sign in to continue to Academic Hub</p>
+<main class="auth-shell">
+  <section class="auth-story" aria-label="About Academic Hub">
+    <a class="auth-brand" routerLink="/">
+      <span class="brand-mark"><i class="pi pi-sparkles"></i></span>
+      <span>Academic <strong>Hub</strong></span>
+    </a>
+
+    <div class="story-copy">
+      <span class="eyebrow"><span class="eyebrow-dot"></span> A better way to grow together</span>
+      <h1>Big ideas start with the right people.</h1>
+      <p>Find your community, share what you’re learning, and turn your next idea into something real.</p>
+
+      <div class="story-note">
+        <div class="note-avatars" aria-hidden="true">
+          <span>AM</span><span>SK</span><span>JL</span><span class="note-plus">+</span>
+        </div>
+        <div>
+          <strong>Made for curious minds</strong>
+          <span>Students, researchers &amp; builders</span>
+        </div>
+      </div>
     </div>
 
-    <form class="auth-form" (ngSubmit)="submit()">
-      <div class="field">
-        <label for="email">Email</label>
-        <input
-          pInputText
-          id="email"
-          type="email"
-          placeholder="you@university.edu"
-          [ngModel]="email()"
-          (ngModelChange)="email.set($event)"
-          name="email"
-          autocomplete="email"
-          required
-        />
+    <div class="story-footer">
+      <i class="pi pi-quote-left"></i>
+      <p>Good work gets better when it’s shared.</p>
+      <span>YOUR ACADEMIC COMMUNITY</span>
+    </div>
+  </section>
+
+  <section class="auth-main">
+    <div class="auth-panel">
+      <div class="auth-heading">
+        <span class="auth-kicker">WELCOME BACK</span>
+        <h2>Sign in to your account</h2>
+        <p>Pick up where you left off. Your community is waiting.</p>
       </div>
 
-      <div class="field">
-        <label for="password">Password</label>
-        <p-password
-          id="password"
-          [ngModel]="password()"
-          (ngModelChange)="password.set($event)"
-          name="password"
-          placeholder="Password"
-          [feedback]="false"
-          [toggleMask]="true"
-          autocomplete="current-password"
-          required
-          styleClass="w-full">
-        </p-password>
-      </div>
-
-      @if (error) {
-        <div class="auth-error">
-          <i class="pi pi-exclamation-circle"></i>
-          <span>{{ error }}</span>
+      @if (demoMode) {
+        <div class="auth-demo">
+          <i class="pi pi-info-circle"></i>
+          <span>Mode démo : utilise n'importe quel email et mot de passe.</span>
         </div>
       }
 
-      <p-button
-        type="submit"
-        label="Sign in"
-        icon="pi pi-sign-in"
-        styleClass="w-full"
-        [loading]="loading"
-        [disabled]="loading">
-      </p-button>
-    </form>
+      <form class="auth-form" (ngSubmit)="submit()">
+        <div class="field">
+          <label for="email">Email address</label>
+          <input
+            pInputText
+            id="email"
+            type="email"
+            placeholder="you@university.edu"
+            [ngModel]="email()"
+            (ngModelChange)="email.set($event)"
+            name="email"
+            autocomplete="email"
+            required
+          />
+        </div>
 
-    <p-divider align="center" type="solid">
-      <span class="divider-label">or continue with</span>
-    </p-divider>
+        <div class="field">
+          <label for="password">Password</label>
+          <p-password
+            id="password"
+            [ngModel]="password()"
+            (ngModelChange)="password.set($event)"
+            name="password"
+            placeholder="Enter your password"
+            [feedback]="false"
+            [toggleMask]="true"
+            autocomplete="current-password"
+            required
+            styleClass="w-full">
+          </p-password>
+        </div>
 
-    <div class="oauth-buttons">
-      <p-button
-        label="Google"
-        icon="pi pi-google"
-        severity="secondary"
-        [outlined]="true"
-        styleClass="w-full"
-        (onClick)="signInWith('google')">
-      </p-button>
-      <p-button
-        label="GitHub"
-        icon="pi pi-github"
-        severity="secondary"
-        [outlined]="true"
-        styleClass="w-full"
-        (onClick)="signInWith('github')">
-      </p-button>
+        @if (error) {
+          <div class="auth-error" role="alert">
+            <i class="pi pi-exclamation-circle"></i>
+            <span>{{ error }}</span>
+          </div>
+        }
+
+        <p-button
+          type="submit"
+          label="Sign in"
+          icon="pi pi-arrow-right"
+          iconPos="right"
+          styleClass="w-full auth-submit"
+          [loading]="loading"
+          [disabled]="loading">
+        </p-button>
+      </form>
+
+      <div class="auth-divider"><span>or continue with</span></div>
+
+      <div class="oauth-buttons">
+        <p-button
+          label="Google"
+          icon="pi pi-google"
+          severity="secondary"
+          [outlined]="true"
+          styleClass="w-full oauth-button"
+          (onClick)="signInWith('google')">
+        </p-button>
+        <p-button
+          label="GitHub"
+          icon="pi pi-github"
+          severity="secondary"
+          [outlined]="true"
+          styleClass="w-full oauth-button"
+          (onClick)="signInWith('github')">
+        </p-button>
+      </div>
+
+      <p class="auth-switch">
+        New to Academic Hub?
+        <a routerLink="/register">Create an account <i class="pi pi-arrow-up-right"></i></a>
+      </p>
+      <p class="auth-legal">By continuing, you agree to our community guidelines.</p>
     </div>
-
-    <p class="auth-switch">
-      Don't have an account?
-      <a routerLink="/register">Create one</a>
-    </p>
-  </p-card>
-</div>
+  </section>
+</main>

@@ -7,11 +7,12 @@
 /* ===== HERO ===== */
 .hero {
   background:
-    radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.16), transparent 45%),
-    linear-gradient(135deg, #0f766e 0%, #0e7490 55%, #4f46e5 100%);
-  border-radius: 18px;
-  padding: 3rem 2rem;
-  margin-bottom: 2.5rem;
+    radial-gradient(ellipse at 82% 15%, rgba(162, 200, 168, 0.18), transparent 36%),
+    linear-gradient(115deg, #18372a, #315c43);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 3.25rem 2rem;
+  margin-bottom: 2rem;
   color: white;
   text-align: center;
 }
@@ -23,14 +24,16 @@
 
 .hero-content h1 {
   margin: 0 0 0.75rem;
-  font-size: 2.6rem;
-  font-weight: 800;
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-weight: 650;
+  letter-spacing: -0.055em;
 }
 
 .hero-content p {
   margin: 0 auto 2rem;
   max-width: 620px;
-  font-size: 1.1rem;
+  color: #d3e0d6;
+  font-size: 1rem;
   line-height: 1.7;
   opacity: 0.95;
 }
@@ -44,7 +47,7 @@
 
 .explore-btn {
   background: white !important;
-  color: #0f766e !important;
+  color: #31583e !important;
   border-color: white !important;
 }
 
@@ -61,24 +64,24 @@
 
 .stat-card {
   background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
+  border: 1px solid #e5ebe6;
+  border-radius: 16px;
   padding: 1.35rem;
   text-align: center;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+  box-shadow: 0 8px 22px rgba(27, 46, 34, 0.045);
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-3px);
-  border-color: #14b8a6;
-  box-shadow: 0 12px 26px rgba(15, 118, 110, 0.12);
+  border-color: #9ab6a2;
+  box-shadow: 0 12px 26px rgba(27, 46, 34, 0.08);
 }
 
 .stat-icon {
   display: block;
   font-size: 1.7rem;
-  color: #0f766e;
+  color: #416d50;
   margin-bottom: 0.4rem;
 }
 
@@ -122,8 +125,8 @@
 
 .search-input:focus {
   outline: none;
-  border-color: #14b8a6;
-  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.12);
+  border-color: #90ad98;
+  box-shadow: 0 0 0 3px rgba(65, 109, 80, 0.1);
 }
 
 .filter-chips {
@@ -149,13 +152,13 @@
 }
 
 .filter-chip.active-filter {
-  border-color: #0f766e;
-  background-color: #0f766e;
+  border-color: #416d50;
+  background-color: #416d50;
   color: white;
 }
 
 .filter-chip:focus-visible {
-  outline: 3px solid rgba(20, 184, 166, 0.35);
+  outline: 3px solid rgba(65, 109, 80, 0.28);
   outline-offset: 2px;
 }
 
@@ -184,8 +187,8 @@
 }
 
 .create-community-banner {
-  border: 1px dashed #99f6e4;
-  background: linear-gradient(120deg, #f0fdfa, #eef2ff) !important;
+  border: 1px dashed #bfd2c2;
+  background: linear-gradient(120deg, #f0f6f1, #f4f6f4) !important;
   box-shadow: none !important;
 }
 
@@ -238,8 +241,8 @@
 
 .community-card:hover {
   transform: translateY(-5px);
-  border-color: #0f766e;
-  box-shadow: 0 16px 34px rgba(15, 118, 110, 0.14) !important;
+  border-color: #9ab6a2;
+  box-shadow: 0 16px 34px rgba(42, 79, 52, 0.1) !important;
 }
 
 .card-image-header {
@@ -274,8 +277,8 @@
   align-self: flex-start;
   padding: 0.15rem 0.6rem;
   border-radius: 999px;
-  background: #f0fdfa;
-  color: #0f766e;
+  background: #eaf2eb;
+  color: #416d50;
   font-size: 0.75rem;
   font-weight: 700;
 }
@@ -348,12 +351,12 @@
 }
 
 .category-row:hover {
-  background: #f0fdfa;
-  color: #0f766e;
+  background: #eaf2eb;
+  color: #416d50;
 }
 
 .category-row.active {
-  background: #0f766e;
+  background: #416d50;
   color: white;
 }
 
@@ -398,12 +401,12 @@
 }
 
 .guideline-list i {
-  color: #0f766e;
+  color: #416d50;
   margin-top: 0.15rem;
 }
 
 .sidebar-cta {
-  background: linear-gradient(135deg, #0f766e, #4f46e5) !important;
+  background: linear-gradient(135deg, #214531, #416d50) !important;
   color: white;
 }
 
@@ -421,7 +424,7 @@
 
 .sidebar-cta button {
   background: white !important;
-  color: #0f766e !important;
+  color: #31583e !important;
   border-color: white !important;
 }
 

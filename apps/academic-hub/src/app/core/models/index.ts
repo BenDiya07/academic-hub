@@ -76,3 +76,30 @@ export interface DashboardStats {
   projects: number;
   discussions: number;
 }
+
+export interface PostComment {
+  id: string;
+  postId: string;
+  authorId: string;
+  authorName: string;
+  authorInitials: string;
+  content: string;
+  createdAt: string;
+}
+
+export interface ChatUser {
+  id: string;
+  name: string;
+  initials: string;
+  avatarUrl: string | null;
+  role: string | null;
+}
+
+export interface ChatMessage {
+  id: string;
+  senderId: string;
+  recipientId: string;
+  content: string;
+  read: boolean;
+  createdAt: string;
+}

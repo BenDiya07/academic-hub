@@ -6,22 +6,30 @@
 
 /* ===== HERO SECTION ===== */
 .hero-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 16px;
-  padding: 3rem 2rem;
-  margin-bottom: 3rem;
+  background:
+    radial-gradient(ellipse at 82% 15%, rgba(162, 200, 168, 0.18), transparent 36%),
+    linear-gradient(115deg, #18372a, #315c43);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 3.25rem 2rem;
+  margin-bottom: 2rem;
   color: white;
   text-align: center;
 }
 
 .hero-content h1 {
-  font-size: 2.5rem;
-  font-weight: 800;
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-weight: 650;
+  letter-spacing: -0.055em;
   margin-bottom: 0.5rem;
 }
 
 .hero-content p {
-  font-size: 1.1rem;
+  max-width: 650px;
+  margin-right: auto;
+  margin-left: auto;
+  color: #d3e0d6;
+  font-size: 1rem;
   margin-bottom: 2rem;
   opacity: 0.95;
 }
@@ -47,18 +55,18 @@
 
 .stat-card {
   background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  border: 1px solid #e5ebe6;
+  border-radius: 16px;
   padding: 1.5rem;
   text-align: center;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+  box-shadow: 0 8px 22px rgba(27, 46, 34, 0.045);
 }
 
 .stat-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
-  border-color: #667eea;
+  box-shadow: 0 12px 26px rgba(27, 46, 34, 0.08);
+  border-color: #9ab6a2;
 }
 
 .stat-icon {
@@ -106,8 +114,8 @@
 
 .search-input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #90ad98;
+  box-shadow: 0 0 0 3px rgba(65, 109, 80, 0.1);
 }
 
 .filter-chips {
@@ -122,7 +130,7 @@
 }
 
 .filter-chip.active-filter {
-  background-color: #667eea !important;
+  background-color: #416d50 !important;
   color: white !important;
 }
 
@@ -162,8 +170,8 @@
 
 .project-card:hover {
   transform: translateY(-6px);
-  border-color: #4f46e5;
-  box-shadow: 0 16px 36px rgba(79, 70, 229, 0.12);
+  border-color: #9ab6a2;
+  box-shadow: 0 16px 36px rgba(42, 79, 52, 0.1);
 }
 
 .project-cover {
@@ -221,8 +229,8 @@
 }
 
 .status-planning {
-  background-color: #fed7aa !important;
-  color: #9a3412 !important;
+  background-color: #f7eedc !important;
+  color: #876630 !important;
 }
 
 .project-description {
@@ -261,7 +269,7 @@
   min-width: 32px;
   min-height: 32px;
   border-radius: 50%;
-  background: #eef2ff;
+  background: #eaf2eb;
   color: #1e293b;
   font-weight: 700;
   font-size: 0.9rem;
@@ -283,7 +291,7 @@
 }
 
 .status-value {
-  color: #667eea;
+  color: #416d50;
   font-weight: 600;
 }
 
@@ -308,8 +316,8 @@
 
 .tech-chip {
   font-size: 0.8rem;
-  background-color: #eef2ff !important;
-  color: #4f46e5 !important;
+  background-color: #eaf2eb !important;
+  color: #416d50 !important;
 }
 
 .project-stats {
@@ -389,7 +397,7 @@
 }
 
 .trending-item:hover {
-  background: #eef2ff;
+  background: #eaf2eb;
   transform: translateX(4px);
 }
 
@@ -401,7 +409,7 @@
 }
 
 .trending-views {
-  color: #667eea;
+  color: #416d50;
   font-weight: 700;
   margin: 0;
   font-size: 0.9rem;
@@ -424,7 +432,7 @@
 }
 
 .category-item:hover {
-  background: #eef2ff;
+  background: #eaf2eb;
 }
 
 .category-icon {

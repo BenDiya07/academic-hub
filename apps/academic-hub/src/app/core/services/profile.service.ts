@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 
 import type { Profile } from '../models';
 import { AuthService } from '../auth/auth.service';
+import { demoGetProfile, demoUpdateProfile } from '../demo/demo-db';
 import { SupabaseService } from '../supabase/supabase.service';
 
 interface ProfileRow {
@@ -37,6 +38,10 @@ export class ProfileService {
   }
 
   async getById(id: string): Promise<Profile | null> {
+    if (this.supabase.isDemo) {
+      return demoGetProfile(id);
+    }
+
     const { data, error } = await this.supabase.client
       .from('profiles')
       .select(
@@ -53,6 +58,11 @@ export class ProfileService {
     const id = this.auth.user()?.id;
     if (!id) {
       throw new Error('You must be signed in to update your profile.');
+    }
+
+    if (this.supabase.isDemo) {
+      demoUpdateProfile(id, input);
+      return;
     }
 
     const { error } = await this.supabase.client

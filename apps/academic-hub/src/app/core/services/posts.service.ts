@@ -1,9 +1,19 @@
 import { inject, Injectable } from '@angular/core';
 
-import type { Post } from '../models';
+import type { Post, PostComment } from '../models';
 import { initials } from '../utils/format';
 import { AuthService } from '../auth/auth.service';
+import {
+  demoAddComment,
+  demoCreatePost,
+  demoListComments,
+  demoListPosts,
+  demoRemovePost,
+  demoSetLiked,
+} from '../demo/demo-db';
 import { SupabaseService } from '../supabase/supabase.service';
+
+export type { PostComment } from '../models';
 
 interface ProfileLite {
   id: string;
@@ -32,16 +42,6 @@ interface CommentRow {
   author: ProfileLite | null;
 }
 
-export interface PostComment {
-  id: string;
-  postId: string;
-  authorId: string;
-  authorName: string;
-  authorInitials: string;
-  content: string;
-  createdAt: string;
-}
-
 @Injectable({ providedIn: 'root' })
 export class PostsService {
   private readonly supabase = inject(SupabaseService);
@@ -49,6 +49,10 @@ export class PostsService {
 
   async list(): Promise<Post[]> {
     const currentId = this.auth.user()?.id ?? null;
+
+    if (this.supabase.isDemo) {
+      return demoListPosts(currentId);
+    }
 
     const { data, error } = await this.supabase.client
       .from('posts')
@@ -67,6 +71,12 @@ export class PostsService {
 
   async create(content: string, tags: string[]): Promise<void> {
     const authorId = this.requireUserId();
+
+    if (this.supabase.isDemo) {
+      demoCreatePost(authorId, content, tags);
+      return;
+    }
+
     const { error } = await this.supabase.client
       .from('posts')
       .insert({ author_id: authorId, content, tags });
@@ -75,6 +85,11 @@ export class PostsService {
 
   async setLiked(postId: string, liked: boolean): Promise<void> {
     const userId = this.requireUserId();
+
+    if (this.supabase.isDemo) {
+      demoSetLiked(postId, userId, liked);
+      return;
+    }
 
     const { error } = liked
       ? await this.supabase.client
@@ -90,6 +105,11 @@ export class PostsService {
   }
 
   async remove(postId: string): Promise<void> {
+    if (this.supabase.isDemo) {
+      demoRemovePost(postId);
+      return;
+    }
+
     const { error } = await this.supabase.client
       .from('posts')
       .delete()
@@ -98,6 +118,10 @@ export class PostsService {
   }
 
   async listComments(postId: string): Promise<PostComment[]> {
+    if (this.supabase.isDemo) {
+      return demoListComments(postId);
+    }
+
     const { data, error } = await this.supabase.client
       .from('post_comments')
       .select(
@@ -114,6 +138,12 @@ export class PostsService {
 
   async addComment(postId: string, content: string): Promise<void> {
     const authorId = this.requireUserId();
+
+    if (this.supabase.isDemo) {
+      demoAddComment(postId, authorId, content);
+      return;
+    }
+
     const { error } = await this.supabase.client
       .from('post_comments')
       .insert({ post_id: postId, author_id: authorId, content });

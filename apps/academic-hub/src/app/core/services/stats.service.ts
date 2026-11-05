@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 
 import type { DashboardStats } from '../models';
+import { demoCounts } from '../demo/demo-db';
 import { SupabaseService } from '../supabase/supabase.service';
 
 type CountableTable = 'profiles' | 'communities' | 'projects' | 'discussions';
@@ -10,6 +11,10 @@ export class StatsService {
   private readonly supabase = inject(SupabaseService);
 
   async counts(): Promise<DashboardStats> {
+    if (this.supabase.isDemo) {
+      return demoCounts();
+    }
+
     const [students, communities, projects, discussions] = await Promise.all([
       this.count('profiles'),
       this.count('communities'),

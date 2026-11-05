@@ -7,6 +7,9 @@ import {
 } from '@supabase/supabase-js';
 
 import { environment } from '../../../environments/environment';
+import type { DemoAccount } from '../demo/demo-db';
+
+const DEMO_SESSION_KEY = 'academic-hub:demo-session';
 
 @Injectable({ providedIn: 'root' })
 export class SupabaseService {
@@ -14,7 +17,8 @@ export class SupabaseService {
   private readonly sessionSignal = signal<Session | null>(null);
   private readonly readySignal = signal(false);
 
-  readonly configurationError: string | null = this.validateConfiguration();
+  readonly configurationError: string | null;
+  readonly isDemo: boolean;
 
   readonly session = this.sessionSignal.asReadonly();
   readonly ready = this.readySignal.asReadonly();
@@ -24,11 +28,15 @@ export class SupabaseService {
   private readonly readyPromise: Promise<void>;
 
   constructor() {
-    if (this.configurationError) {
+    this.configurationError = this.validateConfiguration();
+    this.isDemo =
+      environment.demoMode === true || this.configurationError !== null;
+
+    if (this.isDemo) {
       this.clientInstance = null;
+      this.restoreDemoSession();
       this.readySignal.set(true);
       this.readyPromise = Promise.resolve();
-      console.warn(`[SupabaseService] ${this.configurationError}`);
       return;
     }
 
@@ -65,8 +73,10 @@ export class SupabaseService {
   get client(): SupabaseClient {
     if (!this.clientInstance) {
       throw new Error(
-        this.configurationError ??
-          'Supabase client is not available. Check your environment configuration.'
+        this.isDemo
+          ? 'Supabase is disabled while the app runs in demo mode.'
+          : this.configurationError ??
+              'Supabase client is not available. Check your environment configuration.'
       );
     }
     return this.clientInstance;
@@ -74,6 +84,66 @@ export class SupabaseService {
 
   waitUntilReady(): Promise<void> {
     return this.readyPromise;
+  }
+
+  setDemoSession(account: DemoAccount): void {
+    this.sessionSignal.set(this.createDemoSession(account));
+    this.readySignal.set(true);
+    this.persistDemoAccount(account);
+  }
+
+  clearDemoSession(): void {
+    this.sessionSignal.set(null);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem(DEMO_SESSION_KEY);
+    }
+  }
+
+  private createDemoSession(account: DemoAccount): Session {
+    const user = {
+      id: account.id,
+      email: account.email,
+      user_metadata: { full_name: account.name, name: account.name },
+      app_metadata: { provider: 'demo', providers: ['demo'] },
+      aud: 'authenticated',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    } as unknown as User;
+
+    return {
+      access_token: 'demo-access-token',
+      refresh_token: 'demo-refresh-token',
+      token_type: 'bearer',
+      expires_in: 86_400,
+      expires_at: Math.floor(Date.now() / 1000) + 86_400,
+      user,
+    } as unknown as Session;
+  }
+
+  private restoreDemoSession(): void {
+    const account = this.readDemoAccount();
+    if (account) {
+      this.sessionSignal.set(this.createDemoSession(account));
+    }
+  }
+
+  private readDemoAccount(): DemoAccount | null {
+    if (typeof localStorage === 'undefined') return null;
+    try {
+      const raw = localStorage.getItem(DEMO_SESSION_KEY);
+      return raw ? (JSON.parse(raw) as DemoAccount) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private persistDemoAccount(account: DemoAccount): void {
+    if (typeof localStorage === 'undefined') return;
+    try {
+      localStorage.setItem(DEMO_SESSION_KEY, JSON.stringify(account));
+    } catch {
+      // Ignore storage failures (private mode / quota).
+    }
   }
 
   private validateConfiguration(): string | null {
